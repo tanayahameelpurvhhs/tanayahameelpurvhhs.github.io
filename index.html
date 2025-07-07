@@ -244,8 +244,9 @@ Circle(30,60,10,fill='lightCyan',border='black')
       </div>
     </div>
 
-    <!-- Empty Project Cards (x8) -->
-    <!-- Add the rest of the empty cards below -->
+    <!-- Empty Project Cards (x7) -->
+    <!-- Add 7 empty cards below for other projects -->
+    ${Array.from({ length: 7 }).map(() => `
     <div class="project-card">
       <iframe src=""></iframe>
       <div class="project-info">
@@ -258,13 +259,12 @@ Circle(30,60,10,fill='lightCyan',border='black')
         <p><em>Explanation:</em> Add your explanation here.</p>
       </div>
     </div>
-
-    <!-- Repeat this block for more empty cards -->
+    `).join('')}
 
   </div>
 
   <footer>
-    <p>© 2025 Tanay. All rights reserved.</p>
+    <p>© 2025 Tanay Mohan Ahameelpur. All rights reserved.</p>
   </footer>
 
   <button id="topBtn" onclick="scrollToTop()">🚀</button>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tanay's Portfolio</title>
   <style>
     body {
@@ -36,20 +36,43 @@
       max-width: 700px;
       margin: 30px auto;
       font-size: 1.1em;
+      padding: 0 15px;
     }
 
     .projects {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
+      flex-direction: column;
+      gap: 40px;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .project-card {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .project-card iframe {
+      width: 100%;
+      height: 460px;
+      border: none;
+      display: block;
+    }
+
+    .project-info {
       padding: 20px;
     }
 
-    iframe {
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    .project-info h3 {
+      margin-top: 0;
+      color: #007acc;
+    }
+
+    .project-info p {
+      margin: 10px 0;
     }
 
     footer {
@@ -61,8 +84,7 @@
     }
 
     @media (max-width: 600px) {
-      iframe {
-        width: 100%;
+      .project-card iframe {
         height: 300px;
       }
     }
@@ -76,13 +98,25 @@
   </header>
 
   <div class="intro">
-    <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I love exploring ideas through programming, especially projects inspired by the 17 Global Goals. This site is where I share my work and ideas as I grow as a developer.</p>
+    <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I enjoy building fun and meaningful apps, especially inspired by the 17 Global Goals. This page showcases my personal coding journey and projects.</p>
   </div>
 
   <div class="projects">
-    <iframe width="410" height="460" src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
-    
-    <!-- Add more projects by duplicating the iframe block above -->
+
+    <!-- Project 1 -->
+    <div class="project-card">
+      <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
+      <div class="project-info">
+        <h3>Global Goals Quiz</h3>
+        <p><strong>Description:</strong> This project teaches users about 4 of the 17 United Nations Global Goals through an interactive quiz with visuals and animations.</p>
+        <p><strong>Concepts Learned:</strong> I learned new coding techniques, including screen transitions, user input, and conditional logic.</p>
+        <p><strong>Challenges:</strong> This was a hard project. I had to carefully structure the flow of questions and handle feedback between screens.</p>
+        <p><strong>Code:</strong> Code is viewable inside the embedded project.</p>
+      </div>
+    </div>
+
+    <!-- Add more project cards here -->
+
   </div>
 
   <footer>

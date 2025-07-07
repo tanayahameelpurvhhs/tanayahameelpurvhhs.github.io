@@ -33,21 +33,9 @@
     header {
       background: linear-gradient(90deg, #007acc, #00bfff);
       color: white;
-      padding: 80px 0 30px;
+      padding: 30px 0;
       text-align: center;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      animation: fadeSlideDown 1s ease forwards;
-    }
-
-    @keyframes fadeSlideDown {
-      0% {
-        opacity: 0;
-        transform: translateY(-40px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
 
     h1 {
@@ -103,7 +91,7 @@
       display: flex;
       flex-direction: column;
       gap: 30px;
-      padding: 20px;
+      padding: 40px 20px;
       margin: auto;
     }
 
@@ -208,25 +196,24 @@
 </head>
 <body>
 
+  <!-- Header -->
+  <header>
+    <h1>Tanay's Portfolio</h1>
+    <h2>Coding with Brilliance, Playing with Passion</h2>
+  </header>
+
   <!-- Dark/Light Mode -->
   <div class="toggle-container">
     <button id="modeToggle" onclick="toggleMode()" class="emoji-toggle">🌙</button>
   </div>
-
-  <!-- Header -->
-  <header id="top">
-    <h1>Tanay's Portfolio</h1>
-    <h2>Coding with Brilliance, Playing with Passion</h2>
-  </header>
 
   <!-- Intro -->
   <div class="intro">
     <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I enjoy building fun and meaningful apps. This page showcases my personal coding journey and projects.</p>
   </div>
 
-  <!-- Projects Section -->
+  <!-- Projects -->
   <div class="projects">
-
     <!-- Project 1 -->
     <div class="project-card">
       <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
@@ -253,32 +240,30 @@ Circle(30,60,10,fill='lightCyan',border='black')
       </div>
     </div>
 
-    <!-- 8 Empty Cards -->
-    <!-- Repeatable Template -->
-    <div class="project-card">
-      <iframe src=""></iframe>
-      <div class="project-info">
-        <h3>Project Title</h3>
-        <p><strong>Description:</strong> Write a short description of your project here.</p>
-        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
-        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
-        <p><strong>Code:</strong></p>
-        <pre><code>// Paste your code here</code></pre>
-        <p><em>Explanation:</em> Add your explanation here.</p>
+    <!-- Empty Project Cards (x8) -->
+    <!-- You can copy this block and paste into each card later -->
+    ${Array.from({ length: 8 }).map(() => `
+      <div class="project-card">
+        <iframe src=""></iframe>
+        <div class="project-info">
+          <h3>Project Title</h3>
+          <p><strong>Description:</strong> Write a short description of your project here.</p>
+          <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
+          <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
+          <p><strong>Code:</strong></p>
+          <pre><code>// Paste your code here</code></pre>
+          <p><em>Explanation:</em> Add your explanation here.</p>
+        </div>
       </div>
-    </div>
-    <!-- Copy this block 7 more times -->
+    `).join('')}
   </div>
 
-  <!-- Footer -->
   <footer>
     <p>© 2025 Tanay. All rights reserved.</p>
   </footer>
 
-  <!-- Back to Top Button -->
   <button id="topBtn" onclick="scrollToTop()">🚀</button>
 
-  <!-- Scripts -->
   <script>
     function toggleMode() {
       const body = document.body;
@@ -293,7 +278,7 @@ Circle(30,60,10,fill='lightCyan',border='black')
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Reveal animation
+    // Scroll reveal for project cards
     const cards = document.querySelectorAll('.project-card');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -304,5 +289,6 @@ Circle(30,60,10,fill='lightCyan',border='black')
     }, { threshold: 0.1 });
     cards.forEach(card => observer.observe(card));
   </script>
+
 </body>
 </html>

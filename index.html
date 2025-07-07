@@ -57,24 +57,25 @@
       flex-direction: column;
       justify-content: space-between;
       width: 100%; /* Full width of the container */
-      height: 300px; /* Fixed height for each card */
+      height: 450px; /* Increased height for larger cards */
     }
 
     .project-card iframe {
       width: 100%;
-      height: 180px; /* Adjust height for better fit */
+      height: 300px; /* Larger iframe height for bigger image */
       border: none;
       display: block;
     }
 
     .project-info {
       padding: 10px;
+      overflow: hidden; /* Ensures text doesn't overflow card */
     }
 
     .project-info h3 {
       margin-top: 0;
       color: #007acc;
-      font-size: 1.1em;
+      font-size: 1.3em;
     }
 
     .project-info p {
@@ -97,7 +98,7 @@
       }
 
       .project-card iframe {
-        height: 150px;
+        height: 200px; /* Adjust iframe height for mobile */
       }
     }
   </style>

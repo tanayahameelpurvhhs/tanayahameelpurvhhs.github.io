@@ -14,7 +14,7 @@
       --text-light: #1a1a1a;
       --text-dark: #e0e0e0;
       --primary: #00bfff;
-      --embed-bg: #f0f0f0; /* Gray background for the container around embedded project */
+      --embed-bg: transparent; /* Remove background behind the app */
     }
 
     body {
@@ -126,17 +126,12 @@
       transform: scale(1.015);
     }
 
-    .project-card .embed-container {
-      background-color: var(--embed-bg); /* Gray background for the container around the embedded project */
-      padding: 15px;
-      border-radius: 10px;
-    }
-
     .project-card iframe {
       width: 100%;
       height: 600px;
       border: none;
       display: block;
+      background-color: var(--embed-bg); /* Transparent background for iframe */
     }
 
     .project-info {
@@ -215,9 +210,7 @@
   <div class="projects">
     <!-- Project 1 -->
     <div class="project-card">
-      <div class="embed-container">
-        <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
-      </div>
+      <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
       <div class="project-info">
         <h3>4 Global Goals</h3>
         <p><strong>Description:</strong> This project showcases 4 of the 17 global goals in a small, standard picture made with code.</p>
@@ -244,8 +237,6 @@ Circle(30,60,10,fill='lightCyan',border='black')
     <!-- Empty Project Cards 2-9 -->
     <!-- You can fill these in later -->
     <!-- Copy this block for each new project -->
-    <!-- Empty Card Example -->
-    <!-- You have 8 empty cards ready -->
   </div>
 
   <footer>

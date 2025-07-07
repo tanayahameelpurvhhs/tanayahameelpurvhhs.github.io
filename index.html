@@ -36,6 +36,18 @@
       padding: 80px 0 30px;
       text-align: center;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      animation: fadeSlideDown 1s ease forwards;
+    }
+
+    @keyframes fadeSlideDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     h1 {
@@ -48,32 +60,6 @@
       font-size: 1.2em;
       margin: 10px 0 0;
       font-weight: normal;
-    }
-
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      padding: 15px 0;
-      z-index: 1000;
-      backdrop-filter: blur(8px);
-    }
-
-    .navbar a {
-      color: #00bfff;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.1em;
-      transition: color 0.3s ease, transform 0.3s ease;
-    }
-
-    .navbar a:hover {
-      color: #ff5a5f;
-      transform: scale(1.2);
     }
 
     .toggle-container {
@@ -220,16 +206,9 @@
     }
   </style>
 </head>
-
 <body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <a href="#projects">Projects</a>
-    <a href="#about">About</a>
-    <a href="#top">Back to Top</a>
-  </nav>
 
-  <!-- Dark/Light Toggle -->
+  <!-- Dark/Light Mode -->
   <div class="toggle-container">
     <button id="modeToggle" onclick="toggleMode()" class="emoji-toggle">🌙</button>
   </div>
@@ -241,13 +220,54 @@
   </header>
 
   <!-- Intro -->
-  <div class="intro" id="about">
+  <div class="intro">
     <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I enjoy building fun and meaningful apps. This page showcases my personal coding journey and projects.</p>
   </div>
 
-  <!-- Project Section -->
-  <div class="projects" id="projects">
-    <!-- Add your <div class="project-card"> cards here -->
+  <!-- Projects Section -->
+  <div class="projects">
+
+    <!-- Project 1 -->
+    <div class="project-card">
+      <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
+      <div class="project-info">
+        <h3>4 Global Goals</h3>
+        <p><strong>Description:</strong> This project showcases 4 of the 17 global goals in a small, standard picture made with code.</p>
+        <p><strong>Concepts Learned:</strong> Making pictures with code, using shapes, gradients, and layering.</p>
+        <p><strong>Challenges:</strong> It was time-consuming to plan and draw each image accurately using code.</p>
+        <p><strong>Code:</strong></p>
+        <pre><code>
+### Life Below Water TANAY
+Rect(0,0,200,200,fill='blue',border='black')
+Label('Life Below Water',100,20,size=15,bold=True,font='monospace')
+Oval(140,80,70,35,fill=gradient('cyan','blue'),border='black')
+Polygon(120,80,80,60,80,100,fill=gradient('cyan','blue'),border='black')
+Oval(90,150,80,35,fill=gradient('cyan','blue'),border='black')
+Polygon(60,150,30,130,30,170,fill=gradient('cyan','blue'),border='black')
+Circle(150,120,10,fill='lightCyan',border='black')
+Circle(170,50,10,fill='lightCyan',border='black')
+Circle(50,100,10,fill='lightCyan',border='black')
+Circle(30,60,10,fill='lightCyan',border='black')
+        </code></pre>
+        <p><em>Explanation:</em> I used shapes and gradients in Python to create an underwater scene for the "Life Below Water" goal. The fish and bubbles are coded using ovals, polygons, and circles with gradient fills.</p>
+      </div>
+    </div>
+
+    <!-- 8 Empty Cards -->
+    <!-- Repeatable Template -->
+    <div class="project-card">
+      <iframe src=""></iframe>
+      <div class="project-info">
+        <h3>Project Title</h3>
+        <p><strong>Description:</strong> Write a short description of your project here.</p>
+        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
+        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
+        <p><strong>Code:</strong></p>
+        <pre><code>// Paste your code here</code></pre>
+        <p><em>Explanation:</em> Add your explanation here.</p>
+      </div>
+    </div>
+    <!-- Copy this block 7 more times -->
   </div>
 
   <!-- Footer -->
@@ -258,7 +278,7 @@
   <!-- Back to Top Button -->
   <button id="topBtn" onclick="scrollToTop()">🚀</button>
 
-  <!-- JS for Interactions -->
+  <!-- Scripts -->
   <script>
     function toggleMode() {
       const body = document.body;
@@ -273,6 +293,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Reveal animation
     const cards = document.querySelectorAll('.project-card');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -280,18 +301,8 @@
           entry.target.classList.add('visible');
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.1 });
     cards.forEach(card => observer.observe(card));
-
-    document.querySelectorAll('.navbar a').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
   </script>
 </body>
 </html>

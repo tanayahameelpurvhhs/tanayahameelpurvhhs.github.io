@@ -40,9 +40,9 @@
     }
 
     .projects {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
       padding: 20px;
       max-width: 900px;
       margin: auto;
@@ -57,7 +57,7 @@
 
     .project-card iframe {
       width: 100%;
-      height: 460px;
+      height: 300px;
       border: none;
       display: block;
     }
@@ -84,8 +84,12 @@
     }
 
     @media (max-width: 600px) {
+      .projects {
+        grid-template-columns: 1fr;
+      }
+
       .project-card iframe {
-        height: 300px;
+        height: 250px;
       }
     }
   </style>
@@ -98,25 +102,12 @@
   </header>
 
   <div class="intro">
-    <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I enjoy building fun and meaningful apps, especially inspired by the 17 Global Goals. This page showcases my personal coding journey and projects.</p>
+    <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I enjoy building fun and meaningful apps. This page showcases my personal coding journey and projects.</p>
   </div>
 
   <div class="projects">
+    <!-- Empty Project Cards (1 to 9) -->
 
-    <!-- Project 1 -->
-    <div class="project-card">
-      <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
-      <div class="project-info">
-        <h3>Global Goals Quiz</h3>
-        <p><strong>Description:</strong> This project teaches users about 4 of the 17 United Nations Global Goals through an interactive quiz with visuals and animations.</p>
-        <p><strong>Concepts Learned:</strong> I learned new coding techniques, including screen transitions, user input, and conditional logic.</p>
-        <p><strong>Challenges:</strong> This was a hard project. I had to carefully structure the flow of questions and handle feedback between screens.</p>
-        <p><strong>Code:</strong> Code is viewable inside the embedded project.</p>
-      </div>
-    </div>
-
-    <!-- Empty Project Cards (2 to 10) -->
-    <!-- Copy this structure to create new cards later -->
     <div class="project-card">
       <iframe src=""></iframe>
       <div class="project-info">
@@ -142,7 +133,7 @@
       </div>
     </div>
 
-    <!-- Continue duplicating the block above for Projects 3 to 10 -->
+    <!-- Continue duplicating the block above for Projects 3 to 9 -->
 
   </div>
 
@@ -152,3 +143,4 @@
 
 </body>
 </html>
+

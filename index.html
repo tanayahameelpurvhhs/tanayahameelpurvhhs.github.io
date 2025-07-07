@@ -233,42 +233,44 @@
     #topBtn::before {
       content: '🔥';
       position: absolute;
-      top: -10px;
-      left: 50%;
+      top: 8px;
+      left: -15px;
       transform: translateX(-50%);
       font-size: 18px;
+      opacity: 0;
       animation: fireTrail 2s linear infinite;
     }
 
     #topBtn::after {
       content: '💨';
       position: absolute;
-      top: 10px;
-      left: 50%;
+      top: 20px;
+      left: -35px;
       transform: translateX(-50%);
       font-size: 20px;
+      opacity: 0;
       animation: smokeTrail 2s linear infinite;
     }
 
     @keyframes fireTrail {
       0% {
         opacity: 1;
-        transform: translateX(-50%) scale(1);
+        transform: translateX(0) scale(1);
       }
       100% {
         opacity: 0;
-        transform: translateX(-50%) scale(1.5);
+        transform: translateX(50px) scale(1.5);
       }
     }
 
     @keyframes smokeTrail {
       0% {
         opacity: 0.7;
-        transform: translateX(-50%) scale(1);
+        transform: translateX(0) scale(1);
       }
       100% {
         opacity: 0;
-        transform: translateX(-50%) scale(2);
+        transform: translateX(50px) scale(2);
       }
     }
 
@@ -397,3 +399,4 @@ Circle(30,60,10,fill='lightCyan',border='black')
 
 </body>
 </html>
+v

@@ -57,12 +57,12 @@
       flex-direction: column;
       justify-content: flex-start;
       width: 100%; /* Full width of the container */
-      height: 650px; /* Increased height for each card to fit everything */
+      height: 800px; /* Significantly increased card height */
     }
 
     .project-card iframe {
       width: 100%;
-      height: 400px; /* Adjusted iframe height to make the picture larger */
+      height: 500px; /* Larger iframe height for a bigger image */
       border: none;
       display: block;
     }
@@ -91,16 +91,6 @@
       margin-top: 40px;
     }
 
-    /* Mobile responsiveness */
-    @media (max-width: 600px) {
-      .projects {
-        gap: 20px;
-      }
-
-      .project-card iframe {
-        height: 250px; /* Adjust iframe height for mobile */
-      }
-    }
   </style>
 </head>
 <body>
@@ -115,8 +105,7 @@
   </div>
 
   <div class="projects">
-
-    <!-- Project: 4 Global Goals -->
+    <!-- Single Project Card -->
     <div class="project-card">
       <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
       <div class="project-info">
@@ -127,35 +116,6 @@
         <p><strong>Code:</strong> Code is shown inside the embedded project.</p>
       </div>
     </div>
-
-    <!-- Empty Project Cards (2 to 9) -->
-    <div class="project-card">
-      <iframe src=""></iframe>
-      <div class="project-info">
-        <h3>Project Title</h3>
-        <p><strong>Description:</strong> Write a short description of your project here.</p>
-        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
-        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
-        <p><strong>Code:</strong> (Code will be displayed inside the project or via an image)</p>
-      </div>
-    </div>
-
-    <!-- Repeat the above block 8 more times for a total of 9 empty cards -->
-
-    <!-- Empty Project Card #2 -->
-    <div class="project-card">
-      <iframe src=""></iframe>
-      <div class="project-info">
-        <h3>Project Title</h3>
-        <p><strong>Description:</strong> Write a short description of your project here.</p>
-        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
-        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
-        <p><strong>Code:</strong> (Code will be displayed inside the project or via an image)</p>
-      </div>
-    </div>
-
-    <!-- Continue duplicating the block above for Projects 3 to 9 -->
-
   </div>
 
   <footer>

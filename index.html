@@ -14,7 +14,7 @@
       --text-light: #1a1a1a;
       --text-dark: #e0e0e0;
       --primary: #00bfff;
-      --embed-bg: transparent; /* Remove background behind the app */
+      --embed-bg: transparent;
     }
 
     body {
@@ -131,7 +131,7 @@
       height: 600px;
       border: none;
       display: block;
-      background-color: var(--embed-bg); /* Transparent background for iframe */
+      background-color: var(--embed-bg);
     }
 
     .project-info {
@@ -190,7 +190,6 @@
       margin-top: 40px;
     }
 
-    /* Empty Cards Styles */
     .empty-card {
       background-color: var(--card-light);
       border-radius: 15px;
@@ -250,14 +249,47 @@ Circle(30,60,10,fill='lightCyan',border='black')
     </div>
 
     <!-- Empty Project Cards 2-9 (8 total) -->
-    <div class="empty-card">Empty Card 2 - You can fill this in later!</div>
-    <div class="empty-card">Empty Card 3 - You can fill this in later!</div>
-    <div class="empty-card">Empty Card 4 - You can fill this in later!</div>
-    <div class="empty-card">Empty Card 5 - You can fill this in later!</div>
-    <div class="empty-card">Empty Card 6 - You can fill this in later!</div>
-    <div class="empty-card">Empty Card 7 - You can fill this in later!</div>
-    <div class="empty-card">Empty Card 8 - You can fill this in later!</div>
-    <div class="empty-card">Empty Card 9 - You can fill this in later!</div>
+    <div class="project-card">
+      <iframe src=""></iframe>
+      <div class="project-info">
+        <h3>Project Title</h3>
+        <p><strong>Description:</strong> Write a short description of your project here.</p>
+        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
+        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
+        <p><strong>Code:</strong></p>
+        <pre><code>// Paste your code here</code></pre>
+        <p><em>Explanation:</em> Add your explanation here.</p>
+      </div>
+    </div>
+
+    <!-- Repeat this block for cards 3-9 -->
+    <div class="project-card">
+      <iframe src=""></iframe>
+      <div class="project-info">
+        <h3>Project Title</h3>
+        <p><strong>Description:</strong> Write a short description of your project here.</p>
+        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
+        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
+        <p><strong>Code:</strong></p>
+        <pre><code>// Paste your code here</code></pre>
+        <p><em>Explanation:</em> Add your explanation here.</p>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <iframe src=""></iframe>
+      <div class="project-info">
+        <h3>Project Title</h3>
+        <p><strong>Description:</strong> Write a short description of your project here.</p>
+        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
+        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
+        <p><strong>Code:</strong></p>
+        <pre><code>// Paste your code here</code></pre>
+        <p><em>Explanation:</em> Add your explanation here.</p>
+      </div>
+    </div>
+
+    <!-- Repeat the above block for the rest of the cards -->
   </div>
 
   <footer>

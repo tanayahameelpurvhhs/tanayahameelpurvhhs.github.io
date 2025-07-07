@@ -70,6 +70,7 @@
       cursor: pointer;
       transition: all 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
       box-shadow: 0 4px 20px rgba(0, 191, 255, 0.3);
+      transform-style: preserve-3d;
     }
 
     .emoji-toggle:hover {
@@ -84,6 +85,23 @@
     .emoji-toggle:focus {
       outline: none;
       box-shadow: 0 0 10px #ff5a5f;
+    }
+
+    .flip {
+      animation: flip 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    /* Flip animation */
+    @keyframes flip {
+      0% {
+        transform: rotateY(0deg);
+      }
+      50% {
+        transform: rotateY(180deg);
+      }
+      100% {
+        transform: rotateY(360deg);
+      }
     }
 
     .intro {
@@ -288,8 +306,8 @@ Circle(30,60,10,fill='lightCyan',border='black')
       const toggleBtn = document.getElementById('modeToggle');
 
       // Add flip animation on toggle button
-      toggleBtn.classList.add('spin');
-      setTimeout(() => toggleBtn.classList.remove('spin'), 1000);
+      toggleBtn.classList.add('flip');
+      setTimeout(() => toggleBtn.classList.remove('flip'), 1000);  // Remove the class after animation duration
 
       // Toggle theme
       body.classList.toggle('dark');

@@ -71,7 +71,7 @@
     }
 
     .emoji-toggle.spin {
-      transform: rotate(360deg);
+      animation: flip 1s ease-in-out;
     }
 
     .emoji-toggle:hover {
@@ -79,6 +79,22 @@
       color: #1a1a2e;
       box-shadow: 0 0 15px #00bfff, 0 0 8px #00bfff inset;
       transform: scale(1.15);
+    }
+
+    .emoji-toggle:active {
+      transform: scale(0.95);
+    }
+
+    @keyframes flip {
+      0% {
+        transform: rotateY(0deg);
+      }
+      50% {
+        transform: rotateY(180deg);
+      }
+      100% {
+        transform: rotateY(360deg);
+      }
     }
 
     .intro {
@@ -293,9 +309,9 @@ Circle(30,60,10,fill='lightCyan',border='black')
       const body = document.body;
       const toggleBtn = document.getElementById('modeToggle');
 
-      // Spin animation
+      // Add flip animation on toggle button
       toggleBtn.classList.add('spin');
-      setTimeout(() => toggleBtn.classList.remove('spin'), 600);
+      setTimeout(() => toggleBtn.classList.remove('spin'), 1000);
 
       // Toggle theme
       body.classList.toggle('dark');

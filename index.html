@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,7 +35,7 @@
       color: white;
       padding: 30px 0;
       text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       position: relative;
     }
 
@@ -68,15 +69,15 @@
       transition: transform 0.6s ease, background-color 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
     }
 
+    .emoji-toggle.spin {
+      transform: rotate(360deg);
+    }
+
     .emoji-toggle:hover {
       background-color: #00bfff;
       color: #1a1a2e;
       box-shadow: 0 0 15px #00bfff, 0 0 8px #00bfff inset;
       transform: scale(1.15);
-    }
-
-    .emoji-toggle.spin {
-      transform: rotate(360deg);
     }
 
     .intro {
@@ -169,7 +170,7 @@
       background-color: #1a1a2e;
       color: #00bfff;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     #topBtn:hover {
@@ -187,12 +188,15 @@
     }
   </style>
 </head>
+
 <body>
+
+  <!-- Toggle Mode Button -->
   <div class="toggle-container">
     <button id="modeToggle" onclick="toggleMode()" class="emoji-toggle">🌙</button>
   </div>
 
-  <header id="top">
+  <header>
     <h1>Tanay's Portfolio</h1>
     <h2>Coding with Brilliance, Playing with Passion</h2>
   </header>
@@ -211,7 +215,8 @@
         <p><strong>Concepts Learned:</strong> Making pictures with code, including using loops and variables for graphics.</p>
         <p><strong>Challenges:</strong> It was time-consuming, as I had to carefully plan and code each goal's image.</p>
         <p><strong>Code:</strong></p>
-        <pre><code>### Life Below Water TANAY
+        <pre><code>
+### Life Below Water TANAY
 Rect(0,0,200,200,fill='blue',border='black')
 Label('Life Below Water',100,20,size=15,bold=True,font='monospace')
 Oval(140,80,70,35,fill=gradient('cyan','blue'),border='black')
@@ -221,19 +226,18 @@ Polygon(60,150,30,130,30,170,fill=gradient('cyan','blue'),border='black')
 Circle(150,120,10,fill='lightCyan',border='black')
 Circle(170,50,10,fill='lightCyan',border='black')
 Circle(50,100,10,fill='lightCyan',border='black')
-Circle(30,60,10,fill='lightCyan',border='black')</code></pre>
+Circle(30,60,10,fill='lightCyan',border='black')
+        </code></pre>
         <p><em>Explanation:</em> In this code, I used Python to create an underwater scene that represents the “Life Below Water” global goal. It features fish made from shapes and gradients, labels for clarity, and bubbles to give a realistic aquatic effect.</p>
       </div>
     </div>
 
-    <!-- 8 Empty Cards -->
-    <!-- Copy and fill each as needed -->
-    <!-- Paste 8 times for placeholders -->
-    <!-- Repeat -->
-    <!-- START empty cards -->
-    <!-- Card Template -->
-    <!-- Paste this block 8x or loop generate -->
-    <!-- Example below shows 1 of 8 -->
+    <!-- Empty Project Cards 2-9 -->
+    <!-- You can fill these in later -->
+    <!-- Copy this block for each new project -->
+    <!-- Empty Card Example -->
+    <!-- You have 8 empty cards ready -->
+    ${[...Array(8)].map(() => `
     <div class="project-card">
       <iframe src=""></iframe>
       <div class="project-info">
@@ -246,21 +250,27 @@ Circle(30,60,10,fill='lightCyan',border='black')</code></pre>
         <p><em>Explanation:</em> Add your explanation here.</p>
       </div>
     </div>
-    <!-- Repeat above block 7 more times -->
+    `).join('')}
   </div>
 
   <footer>
     <p>© 2025 Tanay. All rights reserved.</p>
   </footer>
 
+  <!-- Back to Top Button -->
   <button id="topBtn" onclick="scrollToTop()">⬆️</button>
 
+  <!-- JS -->
   <script>
     function toggleMode() {
       const body = document.body;
       const toggleBtn = document.getElementById('modeToggle');
+
+      // Spin animation
       toggleBtn.classList.add('spin');
       setTimeout(() => toggleBtn.classList.remove('spin'), 600);
+
+      // Toggle theme
       body.classList.toggle('dark');
       toggleBtn.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
     }
@@ -269,6 +279,7 @@ Circle(30,60,10,fill='lightCyan',border='black')</code></pre>
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Scroll animation
     const cards = document.querySelectorAll('.project-card');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -280,5 +291,7 @@ Circle(30,60,10,fill='lightCyan',border='black')</code></pre>
 
     cards.forEach(card => observer.observe(card));
   </script>
+
 </body>
+
 </html>

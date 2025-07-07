@@ -58,25 +58,27 @@
     }
 
     .emoji-toggle {
-      font-size: 22px;
-      background: #1a1a2e;
-      color: #00bfff;
-      border: 1px solid #00bfff;
-      padding: 10px 14px;
-      border-radius: 50%;
+      font-size: 24px;
+      width: 48px;
+      height: 48px;
+      border: none;
       cursor: pointer;
-      transition: transform 0.6s ease, background-color 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #007acc, #00bfff);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.6s ease, background 0.4s ease;
     }
 
-    .emoji-toggle.spin {
-      transform: rotate(360deg);
+    .emoji-toggle.flipping {
+      transform: rotateY(180deg);
     }
 
     .emoji-toggle:hover {
-      background-color: #00bfff;
-      color: #1a1a2e;
       box-shadow: 0 0 15px #00bfff, 0 0 8px #00bfff inset;
-      transform: scale(1.15);
+      transform: scale(1.1);
     }
 
     .intro {
@@ -202,7 +204,7 @@
     <h2>Coding with Brilliance, Playing with Passion</h2>
   </header>
 
-  <!-- Dark/Light Mode -->
+  <!-- Toggle -->
   <div class="toggle-container">
     <button id="modeToggle" onclick="toggleMode()" class="emoji-toggle">🌙</button>
   </div>
@@ -212,7 +214,7 @@
     <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I enjoy building fun and meaningful apps. This page showcases my personal coding journey and projects.</p>
   </div>
 
-  <!-- Projects -->
+  <!-- Projects Section -->
   <div class="projects">
     <!-- Project 1 -->
     <div class="project-card">
@@ -240,19 +242,19 @@ Circle(30,60,10,fill='lightCyan',border='black')
       </div>
     </div>
 
-    <!-- Empty Project Cards (x8) -->
-    <!-- You can copy this block and paste into each card later -->
+    <!-- Empty Project Cards -->
+    <!-- Copy this block to fill in more later -->
     ${Array.from({ length: 8 }).map(() => `
       <div class="project-card">
         <iframe src=""></iframe>
         <div class="project-info">
           <h3>Project Title</h3>
           <p><strong>Description:</strong> Write a short description of your project here.</p>
-          <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
-          <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
+          <p><strong>Concepts Learned:</strong> What did you learn?</p>
+          <p><strong>Challenges:</strong> What was hard about this project?</p>
           <p><strong>Code:</strong></p>
-          <pre><code>// Paste your code here</code></pre>
-          <p><em>Explanation:</em> Add your explanation here.</p>
+          <pre><code>// Your code here</code></pre>
+          <p><em>Explanation:</em> Explain how your project works here.</p>
         </div>
       </div>
     `).join('')}
@@ -268,8 +270,8 @@ Circle(30,60,10,fill='lightCyan',border='black')
     function toggleMode() {
       const body = document.body;
       const toggleBtn = document.getElementById('modeToggle');
-      toggleBtn.classList.add('spin');
-      setTimeout(() => toggleBtn.classList.remove('spin'), 600);
+      toggleBtn.classList.add('flipping');
+      setTimeout(() => toggleBtn.classList.remove('flipping'), 600);
       body.classList.toggle('dark');
       toggleBtn.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
     }
@@ -278,7 +280,7 @@ Circle(30,60,10,fill='lightCyan',border='black')
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Scroll reveal for project cards
+    // Reveal animation
     const cards = document.querySelectorAll('.project-card');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -289,6 +291,5 @@ Circle(30,60,10,fill='lightCyan',border='black')
     }, { threshold: 0.1 });
     cards.forEach(card => observer.observe(card));
   </script>
-
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tanay's Portfolio</title>
   <style>
     :root {
@@ -35,6 +35,7 @@
       padding: 30px 0;
       text-align: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      position: relative;
     }
 
     h1 {
@@ -50,9 +51,10 @@
     }
 
     .toggle-container {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 30px;
+      z-index: 999;
     }
 
     .toggle-container button {
@@ -97,11 +99,18 @@
       width: 90%;
       max-width: 900px;
       margin: 0 auto;
-      transition: background-color 0.4s ease;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     body.dark .project-card {
       background-color: var(--card-dark);
+    }
+
+    .project-card.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .project-card iframe {
@@ -137,6 +146,26 @@
       font-family: 'Courier New', Courier, monospace;
     }
 
+    #topBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      z-index: 999;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    #topBtn:hover {
+      background-color: #00bfff;
+    }
+
     footer {
       background-color: #007acc;
       color: white;
@@ -152,7 +181,7 @@
     <button onclick="toggleMode()">Toggle Mode</button>
   </div>
 
-  <header>
+  <header id="top">
     <h1>Tanay's Portfolio</h1>
     <h2>Coding with Brilliance, Playing with Passion</h2>
   </header>
@@ -188,7 +217,23 @@ Circle(30,60,10,fill='lightCyan',border='black')
       </div>
     </div>
 
-    <!-- Empty card template for future use -->
+    <!-- 8 Empty Cards -->
+    <!-- You can copy and fill in these as needed -->
+    <!-- Cards 2 to 9 -->
+    <!-- BEGIN EMPTY CARDS -->
+    <!-- Repeat this block for 8 more times -->
+    <!-- Start Loop -->
+    <!-- Card -->
+    <!-- Empty Card Template -->
+    <!-- Copy and paste this if you want more -->
+    <!-- Card #2 to #9 -->
+    <!-- You can fill in later -->
+    <!-- start empty cards -->
+    <!-- generate 8 times -->
+    <!-- Empty Card -->
+    <!-- Here are 8 placeholders -->
+    <!-- Paste more as needed -->
+    ${[...Array(8)].map((_, i) => `
     <div class="project-card">
       <iframe src=""></iframe>
       <div class="project-info">
@@ -200,19 +245,36 @@ Circle(30,60,10,fill='lightCyan',border='black')
         <pre><code>// Paste your code here</code></pre>
         <p><em>Explanation:</em> Add your explanation here.</p>
       </div>
-    </div>
-
-    <!-- Repeat above block for more cards -->
+    </div>`).join('')}
+    <!-- end empty cards -->
   </div>
 
   <footer>
     <p>© 2025 Tanay. All rights reserved.</p>
   </footer>
 
+  <button id="topBtn" onclick="scrollToTop()">Back to Top</button>
+
   <script>
     function toggleMode() {
       document.body.classList.toggle('dark');
     }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Scroll animation
+    const cards = document.querySelectorAll('.project-card');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => observer.observe(card));
   </script>
 </body>
 </html>

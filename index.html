@@ -5,30 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tanay's Portfolio</title>
   <style>
+    :root {
+      --bg-light: #e6f0ff;
+      --bg-dark: #0e0f1a;
+      --card-light: #ffffff;
+      --card-dark: #1a1a2e;
+      --text-light: #1a1a1a;
+      --text-dark: #e0e0e0;
+      --primary: #00bfff;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #e6f0ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
       margin: 0;
       padding: 0;
-      color: #1a1a1a;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
     }
 
     header {
-      background-color: #007acc;
+      background: linear-gradient(90deg, #007acc, #00bfff);
       color: white;
       padding: 30px 0;
       text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
 
     h1 {
       font-size: 2.5em;
       margin: 0;
+      letter-spacing: 1px;
     }
 
     h2 {
       font-size: 1.2em;
       margin: 10px 0 0;
       font-weight: normal;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+    }
+
+    .toggle-container button {
+      background: #1a1a2e;
+      color: #00bfff;
+      border: 1px solid #00bfff;
+      padding: 8px 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .toggle-container button:hover {
+      background-color: #00bfff;
+      color: #1a1a2e;
     }
 
     .intro {
@@ -48,14 +88,20 @@
     }
 
     .project-card {
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      background-color: var(--card-light);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.15);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      width: 100%;
-      height: auto;
+      width: 90%;
+      max-width: 900px;
+      margin: 0 auto;
+      transition: background-color 0.4s ease;
+    }
+
+    body.dark .project-card {
+      background-color: var(--card-dark);
     }
 
     .project-card iframe {
@@ -71,8 +117,8 @@
 
     .project-info h3 {
       margin-top: 0;
-      color: #007acc;
-      font-size: 1.5em;
+      color: var(--primary);
+      font-size: 1.6em;
     }
 
     .project-info p {
@@ -81,11 +127,14 @@
     }
 
     pre {
-      background-color: #f4f4f4;
+      background-color: #111;
+      color: #00ffff;
       padding: 15px;
       overflow-x: auto;
       white-space: pre-wrap;
-      border-left: 4px solid #007acc;
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      font-family: 'Courier New', Courier, monospace;
     }
 
     footer {
@@ -99,6 +148,10 @@
 </head>
 <body>
 
+  <div class="toggle-container">
+    <button onclick="toggleMode()">Toggle Mode</button>
+  </div>
+
   <header>
     <h1>Tanay's Portfolio</h1>
     <h2>Coding with Brilliance, Playing with Passion</h2>
@@ -109,7 +162,7 @@
   </div>
 
   <div class="projects">
-    <!-- Project 1: 4 Global Goals -->
+    <!-- Project 1 -->
     <div class="project-card">
       <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
       <div class="project-info">
@@ -120,34 +173,22 @@
         <p><strong>Code:</strong></p>
         <pre><code>
 ### Life Below Water TANAY
-### Rectangle for the goals we chose
 Rect(0,0,200,200,fill='blue',border='black')
-
-### Labelling so it is clear what goal we have done
 Label('Life Below Water',100,20,size=15,bold=True,font='monospace')
-
-### Drawing the Fish
 Oval(140,80,70,35,fill=gradient('cyan','blue'),border='black')
 Polygon(120,80,80,60,80,100,fill=gradient('cyan','blue'),border='black')
 Oval(90,150,80,35,fill=gradient('cyan','blue'),border='black')
 Polygon(60,150,30,130,30,170,fill=gradient('cyan','blue'),border='black')
-
-### Drawing the bubbles for it to be a bit more realistic in a water environment.
 Circle(150,120,10,fill='lightCyan',border='black')
 Circle(170,50,10,fill='lightCyan',border='black')
 Circle(50,100,10,fill='lightCyan',border='black')
 Circle(30,60,10,fill='lightCyan',border='black')
         </code></pre>
-        <p><em>Explanation:</em> In this code, you can see that I have used the programming language Python, with various shapes and some comments. In this code, you can see labels, which are used to label the part of the project-- Life Below Water. We have also used various shapes to help us layer and make the fish, and bubbles, using the gradients to express the color shown in the picture.</p>
+        <p><em>Explanation:</em> In this code, I used Python to create an underwater scene that represents the “Life Below Water” global goal. It features fish made from shapes and gradients, labels for clarity, and bubbles to give a realistic aquatic effect.</p>
       </div>
     </div>
 
-    <!-- Empty Cards -->
-    <!-- Card 2–9 follow the same format -->
-    <!-- Empty Card Template -->
-    <!-- Repeat 8 times below for a total of 9 cards -->
-
-    <!-- Empty Card #2 -->
+    <!-- Empty card template for future use -->
     <div class="project-card">
       <iframe src=""></iframe>
       <div class="project-info">
@@ -161,15 +202,17 @@ Circle(30,60,10,fill='lightCyan',border='black')
       </div>
     </div>
 
-    <!-- Repeat this block for cards 3 to 9 -->
-    <!-- ... (7 more identical empty cards) -->
-    <!-- You can paste the same block above and edit each when you have new projects -->
-
+    <!-- Repeat above block for more cards -->
   </div>
 
   <footer>
     <p>© 2025 Tanay. All rights reserved.</p>
   </footer>
 
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
 </body>
 </html>

@@ -247,17 +247,30 @@ Circle(30,60,10,fill='lightCyan',border='black')
     <!-- Empty Project Cards (x7) -->
     <!-- Add 7 empty cards below for other projects -->
     <div class="project-card">
-      <iframe src=""></iframe>
-      <div class="project-info">
-        <h3>Project Title</h3>
-        <p><strong>Description:</strong> Write a short description of your project here.</p>
-        <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
-        <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
-        <p><strong>Code:</strong></p>
-        <pre><code>// Paste your code here</code></pre>
-        <p><em>Explanation:</em> Add your explanation here.</p>
-      </div>
-    </div>
+  <iframe width="410" height="460" src="https://academy.cs.cmu.edu/sharing/midnightBlueFly830313/embed"></iframe>
+  <div class="project-info">
+    <h3>Life on Land Slides</h3>
+    <p><strong>Description:</strong> This interactive slideshow project presents problems affecting life on land and how we can help. It was created using basic animations and Python logic in CMU CS Academy.</p>
+    <p><strong>Concepts Learned:</strong> Using slides in Python, updating shapes dynamically, creating reusable functions, and working with event handlers like <code>onMouseRelease()</code>.</p>
+    <p><strong>Challenges:</strong> Making transitions between slides work properly and positioning shapes responsively were tricky parts of the project.</p>
+    <p><strong>Code:</strong></p>
+    <pre><code>
+### Slide Transition Snippet
+def onMouseRelease(x, y):
+    app.slide = app.slide + 1
+    if app.slide == 7:
+        app.slide = 0
+    if app.slide == 1:
+        drawLogoA(300,300,70)
+        drawLogoB(75,308,30)
+        problemNumber.value = 'Problem 1'
+        cause.value = 'Deforestation is happening too quickly...'
+        effect.value = '...the world\'s forests are getting smaller'
+        progressbar.y2 = 114
+    </code></pre>
+    <p><em>Explanation:</em> This part of the code controls what happens when you click to go to the next slide. It updates the logos, text, and progress bar based on the current slide number. The use of reusable drawing functions like <code>drawLogoA()</code> and <code>drawLogoB()</code> helps keep the code cleaner and more organized.</p>
+  </div>
+</div>
     <!-- Empty Project Card 1 -->
 <div class="project-card">
   <iframe src=""></iframe>

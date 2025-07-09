@@ -255,6 +255,8 @@ Circle(30,60,10,fill='lightCyan',border='black')
     <p><strong>Challenges:</strong> Making transitions between slides work properly and positioning shapes responsively were tricky parts of the project.</p>
     <p><strong>Code:</strong></p>
     <pre><code>
+Rect(0,0,400,400,fill='skyBlue')
+Rect(0,300,400,100,fill='lightGreen')
 sun = Star(120,150,20,9,roundness = 90, fill='yellow') 
 sunback = Star(120,150,30,9,roundness = 10, fill='yellow')
 def drawLogoA(x,y,radius):
@@ -287,6 +289,19 @@ if app.slide==0:
         drawLogoB(280,350,60)
         title.value = 'Life on Land'
         author.value = 'Tanay and Gurshaan'
+def onMouseRelease(x,y):
+    app.slide=app.slide+1
+    if app.slide ==7:
+        app.slide=0
+    if app.slide==1:
+        drawLogoA(300,300,70)
+        drawLogoB(75,308,30)
+        problemNumber.value = 'Problem 1'
+        cause.value = 'Deforestation is happening too quickly and as a '
+        effect.value = 'result, the worlds forests are getting smaller'
+        title.value = ''
+        author.value = ''
+        progressbar.y2 = 114
     </code></pre>
     <p><em>Explanation:</em> In the functions drawLogoA, and drawLogoB, you can see they are a sun and a tree stump, respectively. These are drawn all across the slides, to an effect of Life on Land, and what Life on Land depends on, being the tree stump, and the sun respectively. In this given code snippet, you can see a number of variables defined in the code, which will be helpful for when the project operates. There is also a progress bar inside this code snippet, if you look closely at the variables. These variables and values help us build and help the project be what it is now.</p>
   </div>

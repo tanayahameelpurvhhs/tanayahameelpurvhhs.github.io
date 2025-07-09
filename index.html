@@ -255,19 +255,40 @@ Circle(30,60,10,fill='lightCyan',border='black')
     <p><strong>Challenges:</strong> Making transitions between slides work properly and positioning shapes responsively were tricky parts of the project.</p>
     <p><strong>Code:</strong></p>
     <pre><code>
-def onMouseRelease(x, y):
-    app.slide = app.slide + 1
-    if app.slide == 7:
-        app.slide = 0
-    if app.slide == 1:
-        drawLogoA(300,300,70)
-        drawLogoB(75,308,30)
-        problemNumber.value = 'Problem 1'
-        cause.value = 'Deforestation is happening too quickly...'
-        effect.value = '...the world's forests are getting smaller'
-        progressbar.y2 = 114
+sun = Star(120,150,20,9,roundness = 90, fill='yellow') 
+sunback = Star(120,150,30,9,roundness = 10, fill='yellow')
+def drawLogoA(x,y,radius):
+    sun.centerX = x
+    sun.centerY = y
+    sun.radius = radius
+    sunback.centerX = x
+    sunback.centerY = y
+    sunback.radius = (radius * 3)/2
+    
+tree = Polygon(100,345,140,315,155,280,195,280,210,315,250,345,fill='saddleBrown')
+
+def drawLogoB(x,y,size):
+    tree.centerX = x
+    tree.centerY = y
+    tree.width = size + 40
+    tree.height = size
+
+    
+cause = Label('',200,150,size = 15)
+effect = Label('',200,190,size = 15)
+problemNumber = Label('',200,50,size = 24)
+title = Label('',200,220,size = 30)
+author = Label('',200,260,size = 20)
+Line(0,0,0,400,lineWidth = 30)
+progressbar = Line(0,0,0,57,lineWidth = 30,fill='yellow')
+app.slide=0
+if app.slide==0:
+        drawLogoA(120,150,40)
+        drawLogoB(280,350,60)
+        title.value = 'Life on Land'
+        author.value = 'Tanay and Gurshaan'
     </code></pre>
-    <p><em>Explanation:</em> This part of the code controls what happens when you click to go to the next slide. It updates the logos, text, and progress bar based on the current slide number. The use of reusable drawing functions like <code>drawLogoA()</code> and <code>drawLogoB()</code> helps keep the code cleaner and more organized.</p>
+    <p><em>Explanation:</em> In the functions drawLogoA, and drawLogoB, you can see they are a sun and a tree stump, respectively. These are drawn all across the slides, to an effect of Life on Land, and what Life on Land depends on, being the tree stump, and the sun respectively. In this given code snippet, you can see a number of variables defined in the code, which will be helpful for when the project operates. There is also a progress bar inside this code snippet, if you look closely at the variables. These variables and values help us build and help the project be what it is now.</p>
   </div>
 </div>
     <!-- Empty Project Card 1 -->

@@ -317,9 +317,64 @@ def onMouseRelease(x,y):
     <p><strong>Challenges:</strong> Getting the pollution to reset after reaching the clean goal and properly updating the tank counter took some debugging and testing.</p>
     <p><strong>Code:</strong></p>
     <pre><code>
-placeholder
+def nextRound():
+    tank.opacity = 100
+    app.cleanLevel = 0
+    app.slide += 1
+    if app.slide > 2:
+        app.slide = 0
+
+def cleanReplica(opacityNumber,value):
+    app.cleanLevel+=1
+    newOpacity = tank.opacity-opacityNumber
+    
+    if newOpacity < 0:
+        nextRound()
+        click2start.value='Round ' + (app.slide + 1)
+    else: 
+        tank.opacity = newOpacity
+        if tank.opacity > 70: 
+            click2start.value = 'Game ON!'
+        elif tank.opacity > 50 :
+            click2start.value = 'Keep it up'
+        elif tank.opacity > 30:
+            click2start.value = 'Crossed halfway mark!'
+        elif tank.opacity > 0:
+            click2start.value = 'Almost There'
+        else:
+            click2start.value='Good Job! You did it!'
+
+    print(app.cleanLevel)
+    print(tank.opacity)
+
+        
+def startGame(x,y):
+    infoBackground.visible=False
+    base.visible=True
+    title.visible=True
+    info1.visible=False
+    info2.visible=False
+    info3.visible=False
+    info4.visible=False
+    click2start.visible=True
+    board.visible=False
+    tank.visible=True
+    app.cleanLevel=0
+    tank.fill=gradient('darkGreen','green','darkGreen')
+    app.gameStarted = True
+
+def onMousePress(x,y):
+    if app.gameStarted == False:
+        startGame(100,100)
+    else:
+        if app.slide == 0 :
+            cleanReplica(20,100)
+        elif app.slide == 1:
+            cleanReplica(10,100)
+        elif app.slide == 2:
+            cleanReplica(5,100)
     </code></pre>
-    <p><em>Explanation:</em> This function checks for pollution clicks. Once 5 clicks are reached, the clean tank fills and the pollution is reset, reinforcing the cleanup idea.</p>
+    <p><em>Explanation:</em> This function checks for pollution clicks. Once an (n) amount of clicks are reached, the clean tank fills and the pollution is reset, reinforcing the cleanup idea.</p>
   </div>
 </div>
 

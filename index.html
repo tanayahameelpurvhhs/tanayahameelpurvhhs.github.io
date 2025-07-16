@@ -314,22 +314,14 @@ def onMouseRelease(x,y):
     <h3>Clean The Water!</h3>
     <p><strong>Description:</strong> A clicking game where you clean up water by clicking on the tank. Each time you click on the tank, the water gets cleaner. It supports Global Goal 6: Clean Water and Sanitation.</p>
     <p><strong>Concepts Learned:</strong> I learned how to use mouse events, variables, conditionals, and counters to create interactive gameplay with resetting behavior.</p>
-    <p><strong>Challenges:</strong> Getting the pollution to reset after reaching the clean goal and properly updating the tank counter took some debugging and testing.</p>
+    <p><strong>Challenges:</strong> Trying to transition from the next slide and making it so that the tank goes down in pollution required debugging and testing.</p>
     <p><strong>Code:</strong></p>
     <pre><code>
-def nextRound():
-    tank.opacity = 100
-    app.cleanLevel = 0
-    app.slide += 1
-    if app.slide > 2:
-        app.slide = 0
-
 def cleanReplica(opacityNumber,value):
     app.cleanLevel+=1
     newOpacity = tank.opacity-opacityNumber
     
     if newOpacity < 0:
-        nextRound()
         click2start.value='Round ' + (app.slide + 1)
     else: 
         tank.opacity = newOpacity
@@ -374,7 +366,7 @@ def onMousePress(x,y):
         elif app.slide == 2:
             cleanReplica(5,100)
     </code></pre>
-    <p><em>Explanation:</em> This function checks for pollution clicks. Once an (n) amount of clicks are reached, the clean tank fills and the pollution is reset, reinforcing the cleanup idea.</p>
+    <p><em>Explanation:</em> This function checks for pollution clicks. Once an (n) amount of clicks are reached, the clean tank fills and the pollution is removed from the tank, reinforcing the cleanup idea.</p>
   </div>
 </div>
 

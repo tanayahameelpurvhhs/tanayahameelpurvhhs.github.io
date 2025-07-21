@@ -451,27 +451,7 @@ def onMousePress(mouseX,mouseY) :
         if (app.slides == 2):
             app.slides +=2
         elif (app.slides == 4) : 
-            Option1.opacity = 0
-            Option2.opacity = 0
-            Option3.opacity = 0
-            Option4.opacity = 0
-            Option5.opacity = 0
-            Option6.opacity = 0
-            Option1.value = ''
-            Option2.value = ''
-            Option3.value = ''
-            Option4.value = ''
-            Option5.value = ''
-            Option6.value = ''
-            Question1Label.value = ''
-            InstructionOne.value = ''
-            Question2Label.value = ''
-            InstructionTwo.value = ''
-            Question3Label.value = ''
-            InstructionThree.value = ''
-            InstructionFour.value = 'You got',app.score ,'out of six'
-            InstructionFive.value = ''
-            InstructionSix.value = ''
+            #Sets everything to 0 and presents the score
         print(app.slides)
     </code></pre>
     <p><em>Explanation:</em> This function checks which quiz option the user clicks and updates the score based on whether the selected answer is correct. We also change the fill color to give visual feedback.</p>

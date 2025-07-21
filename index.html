@@ -432,27 +432,6 @@ def onMousePress(mouseX,mouseY) :
             Option6.fill='yellow'
         else:
             app.score-= 1
-            
-            
-            
-    if (transitionOne.contains(mouseX,mouseY)):
-        #print(app.slides)
-        #print(app.score)
-        if (app.slides == 1) : 
-            InstructionOne.value = 'Buying local products always ensures sustainable production'
-            InstructionThree.value = 'Are there subsidies that encourage wasteful consumption?'
-            InstructionFive.value = 'Food waste isnt important in achieving sustainable production & consumption'
-            Option1.fill = 'white'
-            Option3.fill = 'white'
-            Option6.fill = 'white'
-            app.Question1 = 'False'
-            app.slides+=1
-            print('we are on', app.slides)
-        if (app.slides == 2):
-            app.slides +=2
-        elif (app.slides == 4) : 
-            #Sets everything to 0 and presents the score
-        print(app.slides)
     </code></pre>
     <p><em>Explanation:</em> This function checks which quiz option the user clicks and updates the score based on whether the selected answer is correct. We also change the fill color to give visual feedback.</p>
   </div>

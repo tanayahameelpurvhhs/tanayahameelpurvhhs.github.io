@@ -458,47 +458,6 @@ def onMousePress(mouseX,mouseY) :
             Option6.fill='yellow'
         else:
             app.score-= 1
-            
-            
-            
-    if (transitionOne.contains(mouseX,mouseY)):
-        #print(app.slides)
-        #print(app.score)
-        if (app.slides == 1) : 
-            InstructionOne.value = 'Buying local products always ensures sustainable production'
-            InstructionThree.value = 'Are there subsidies that encourage wasteful consumption?'
-            InstructionFive.value = 'Food waste isnt important in achieving sustainable production & consumption'
-            Option1.fill = 'white'
-            Option3.fill = 'white'
-            Option6.fill = 'white'
-            app.Question1 = 'False'
-            app.slides+=1
-            print('we are on', app.slides)
-        if (app.slides == 2):
-            app.slides +=2
-        elif (app.slides == 4) : 
-            Option1.opacity = 0
-            Option2.opacity = 0
-            Option3.opacity = 0
-            Option4.opacity = 0
-            Option5.opacity = 0
-            Option6.opacity = 0
-            Option1.value = ''
-            Option2.value = ''
-            Option3.value = ''
-            Option4.value = ''
-            Option5.value = ''
-            Option6.value = ''
-            Question1Label.value = ''
-            InstructionOne.value = ''
-            Question2Label.value = ''
-            InstructionTwo.value = ''
-            Question3Label.value = ''
-            InstructionThree.value = ''
-            InstructionFour.value = 'You got',app.score ,'out of six'
-            InstructionFive.value = ''
-            InstructionSix.value = ''
-        print(app.slides)
 </code></pre>
     <p><em>Explanation:</em> This code shows us the hits and contains that we have used, the multiple variable we had put to use. There were also multiple topics to cover in the UN's goal 12. We have also used the onMousePress function, and we have used multiple other such as the onKeyPress.</p>
   </div>

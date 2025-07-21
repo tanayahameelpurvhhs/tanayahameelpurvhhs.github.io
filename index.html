@@ -372,96 +372,35 @@ def onMousePress(x,y):
 
 
 <!-- Empty Project Card 2 -->
+<!-- Project 4 -->
 <div class="project-card">
-  <iframe src="" width="410" height="460"
-   src="https://academy.cs.cmu.edu/sharing/peruMonkey272275/embed"> </iframe>
+  <iframe width="410" height="460" src="https://academy.cs.cmu.edu/sharing/peruMonkey272275/embed"></iframe>
   <div class="project-info">
     <h3>UN Goal 12 Quiz</h3>
-    <p><strong>Description:</strong>This is a quiz me and my partner made to question you on the UN's Goal 12. This quiz will ask you all sorts of things such as the importance of recycling, True or false questions mostly. </p>
-    <p><strong>Concepts Learned:</strong> I have learned to use hits and contains and the onKeyPress events which have helped me a lot while making this project. This project is kind of in like a slideshow.</p>
-    <p><strong>Challenges:</strong> Mostly the teamwork that we put in together as it was pretty stranded on the first day, which caused us not to complete.</p>
+    <p><strong>Description:</strong> This is a quiz my partner and I made to teach about UN Goal 12 (Responsible Consumption and Production). It includes mostly true/false and multiple-choice questions about recycling and sustainability.</p>
+    <p><strong>Concepts Learned:</strong> I learned how to use `hits`, `contains`, and `onKeyPress` events. We designed the quiz like a slideshow that updates as users interact.</p>
+    <p><strong>Challenges:</strong> Teamwork was a major challenge at first, which delayed our progress. But once we got organized, we pushed through together.</p>
     <p><strong>Code:</strong></p>
-    <pre><code>// def onMouseMove(mouseX,mouseY):
-    cursor.centerX = mouseX
-    cursor.centerY = mouseY
-    if (start.contains(mouseX,mouseY)==True):
-        if startBackground.opacity==0 :
-            startLabel.value=' '
-        start.fill=gradient('grey','dimGrey','grey','dimGrey','grey','dimGrey','grey','dimGrey','grey','dimGrey','grey','dimGrey',start='top-right')
-    else:
-        start.fill='dimGrey'
-    if (startLabel.contains(mouseX,mouseY)==True):
-        startLabel.fill=gradient('red','orange','yellow','green','blue','indigo','violet',start='top-left')
-        startLabel.value="I'm Rainbow!"
-        startLabel.bold=True
-        if startBackground.opacity==0 :
-            startLabel.value=' '
-    else:
-        startLabel.fill='black'
-        startLabel.value='Press Enter 2 Start!'
-        startLabel.bold=False
-        if startBackground.opacity==0 :
-            startLabel.value=' '
-    if (startBackground.contains(mouseX,mouseY)==True):
-        startBackground.fill='grey'
-    else:
-        startBackground.fill='black'
-        
-        
-def onMousePress(mouseX,mouseY) : 
-    
-    if (Option1.hits(mouseX,mouseY)):
+    <pre><code>
+def onMousePress(mouseX, mouseY):
+    if (Option1.hits(mouseX, mouseY)):
         if (Option1Label.value == app.Question1):
             app.score += 1
-            Option1.fill='yellow'
-            print(app.score)
+            Option1.fill = 'yellow'
         else:
-            app.score-= 1
-    
-    elif (Option2.hits(mouseX,mouseY)):
+            app.score -= 1
+    elif (Option2.hits(mouseX, mouseY)):
         if (Option2Label.value == app.Question1):
             app.score += 1
-            Option2.fill='yellow'
+            Option2.fill = 'yellow'
         else:
-            app.score-= 1
-            
-    if (Option3.hits(mouseX,mouseY)):
-        if Option3.opacity == 0 : 
-            Option3.opacity = 0
-        elif (Option3Label.value == app.Question2):
-            app.score += 1
-            Option3.fill='yellow'
-            print(app.score)
-        else:
-            app.score-= 1
-    elif (Option4.hits(mouseX,mouseY)):
-        if Option4.opacity == 0 : 
-            Option4.opacity = 0
-        elif (Option4Label.value == app.Question2):
-            app.score +=1
-            Option4.fill='yellow'
-        else:
-            app.score-= 1
-    if (Option5.hits(mouseX,mouseY)):
-        if Option5.opacity == 0 : 
-            Option5.opacity = 0
-        elif(Option5Label.value == app.Question3):
-            app.score+=1
-            Option5.fill='yellow'
-        else:
-            app.score-= 1
-    elif(Option6.hits(mouseX,mouseY)):
-        if Option6.opacity == 0 : 
-            Option6.opacity = 0
-        elif(Option6Label.value == app.Question3):
-            app.score+=1
-            Option6.fill='yellow'
-        else:
-            app.score-= 1
-</code></pre>
-    <p><em>Explanation:</em> This code shows us the hits and contains that we have used, the multiple variable we had put to use. There were also multiple topics to cover in the UN's goal 12. We have also used the onMousePress function, and we have used multiple other such as the onKeyPress.</p>
+            app.score -= 1
+# (Continues for Option3-6)...
+    </code></pre>
+    <p><em>Explanation:</em> This function checks which quiz option the user clicks and updates the score based on whether the selected answer is correct. We also change the fill color to give visual feedback.</p>
   </div>
 </div>
+
 
 <!-- Empty Project Card 3 -->
 <div class="project-card">

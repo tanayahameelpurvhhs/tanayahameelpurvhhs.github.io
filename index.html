@@ -440,17 +440,46 @@ def onMousePress(mouseX,mouseY) :
 
 <!-- Empty Project Card 3 -->
 <div class="project-card">
-  <iframe src=""></iframe>
+  <iframe src="https://academy.cs.cmu.edu/sharing/chartreuseBee884272/embed" width="410" height="460"></iframe>
   <div class="project-info">
-    <h3>Project Title</h3>
-    <p><strong>Description:</strong> Write a short description of your project here.</p>
-    <p><strong>Concepts Learned:</strong> Write about what you learned here.</p>
-    <p><strong>Challenges:</strong> What was hard? Describe it here.</p>
+    <h3>Find The Food</h3>
+    <p><strong>Description:</strong> This project is themed off of UN Goal 2, Zero Hunger, which was made by me and my partner.</p>
+    <p><strong>Concepts Learned:</strong> Learned complex conditionals, using functions, hits and contains, etc.</p>
+    <p><strong>Challenges:</strong> The debugging and the complex conditionals.</p>
     <p><strong>Code:</strong></p>
-    <pre><code>// Paste your code here</code></pre>
-    <p><em>Explanation:</em> Add your explanation here.</p>
+    <pre><code>def onMousePress(mouseX, mouseY):
+    scoreCounter.toFront()
+    scoreDisplay.toFront()
+    if app.gameStarted == True and circleFinder.contains(app.spritePosX, app.spritePosY):
+        print('hit')
+        hideSprite(spriteGroup)
+        if app.spritePosX == 100:
+            changeValue(388, 333)
+        elif app.spritePosX == 388:
+            changeValue(65, 329)
+        elif app.spritePosX == 65:
+            changeValue(332, 251)
+        elif app.spritePosX == 332:
+            changeValue(107, 45)
+        elif app.spritePosX == 107:
+            changeValue(356, 194)
+        elif app.spritePosX == 356:
+            changeValue(174, 356)
+        elif app.spritePosX == 174:
+            changeValue(222, 301)
+        elif app.spritePosX == 222:
+            changeValue(48, 352)
+        if app.score >= 8:
+            Label('You found all of the packages. Good Job, Scavenger.', 200, 245, fill='white', font='orbitron')
+            Label('Your Pay: 15,000$', 200, 260, fill='white', font='orbitron')
+            Label('The UN has enough food for their conference.', 200, 275, fill='white', font='orbitron')
+        foodSprite(app.spritePosX, app.spritePosY)
+    else:
+        print('no hit', app.spritePosX, app.spritePosY)</code></pre>
+    <p><em>Explanation:</em> This function runs when the mouse is clicked. If the player correctly clicks on the sprite (food package), it moves the sprite to the next location, increases the score, and eventually shows a win screen with a congratulatory message.</p>
   </div>
 </div>
+
 
 <!-- Empty Project Card 4 -->
 <div class="project-card">

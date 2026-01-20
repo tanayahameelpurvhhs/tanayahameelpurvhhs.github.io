@@ -1,19 +1,19 @@
 /**
- * PROJECT: ALIEN ARTIFACT (STABILIZED)
+ * PROJECT: ALIEN ARTIFACT (FINAL STABLE BUILD)
  * FEATURES: WIREFRAME OUTLINE, SMOOTH PHYSICS, NO RINGS
  */
 
 // --- CONFIGURATION ---
 const CONFIG = {
-  particles: 200,      // Background stars
-  baseSize: 70,        // Core size
-  maxGrowth: 100,      // Reduced slightly to prevent "exploding" look
-  noiseScale: 3.0,     // How "spikey" it is
+  particles: 200,      // Number of background stars
+  baseSize: 70,        // Starting size of the core
+  maxGrowth: 90,       // How much it grows when loud (Reduced to prevent explosion)
+  noiseScale: 3.0,     // Texture detail (Higher = spikier)
   
   // PHYSICS TUNING (The fix for shaking)
-  // Lower = Smoother/Slower reaction. Higher = Twitchy.
+  // 0.05 = Very slow/smooth. 0.9 = Fast/Twitchy.
   smoothness: 0.08,    
-  rippleSpeed: 0.003,  // How fast the liquid flows (Slower is better)
+  rippleSpeed: 0.003,  // Constant speed of liquid flow
 };
 
 // --- GLOBAL VARIABLES ---
@@ -40,7 +40,7 @@ function initSystem() {
     mic.start();
     
     // SMOOTHING: 0.9 means we average 90% of previous frame
-    // This removes the "jitter" from the raw audio
+    // This helps remove "jitter" from the raw audio
     fft = new p5.FFT(0.9, 64); 
     fft.setInput(mic);
     
@@ -54,10 +54,10 @@ function initSystem() {
 }
 
 function draw() {
-  background(0); // Void
+  background(0); // Deep Space Black
 
   if (!isStarted) {
-    // Idle: A simple breathing wireframe sphere
+    // Idle Animation: A simple breathing wireframe sphere
     rotateY(frameCount * 0.5);
     stroke(180, 50, 100); 
     strokeWeight(1);
@@ -73,21 +73,23 @@ function draw() {
   fft.analyze();
   let bassEnergy = fft.getEnergy("bass");
   
-  // PHYSICS FIX:
-  // If the audio is quiet (< 30), force it to 0 to stop "idle vibrating"
+  // PHYSICS FIX: Deadzone
+  // If the audio is very quiet (< 30), force it to 0 to stop "idle vibrating"
   if (bassEnergy < 30) bassEnergy = 0;
   
-  // Lerp: Moves smoothedBass slowly towards bassEnergy
+  // Lerp: Linearly Interpolate towards the target energy
+  // This makes the movement look heavy and fluid, not twitchy
   smoothedBass = lerp(smoothedBass, bassEnergy, CONFIG.smoothness);
 
   // --- 2. CAMERA ---
-  orbitControl(); 
-  rotateY(frameCount * 0.05); // Very slow rotation
+  orbitControl(); // Mouse interaction enabled
+  rotateY(frameCount * 0.05); // Slow cinematic drift
 
   // --- 3. LIGHTING ---
   ambientLight(40);
+  // Red/Blue side lights for contrast
   pointLight(200, 100, 100, 500, -500, 200); 
-  pointLight(0, 0, 100, 0, 0, 300); // White front light for clarity
+  pointLight(0, 0, 100, 0, 0, 300); // White front light
 
   // --- 4. DRAW THE ENTITY ---
   drawProceduralShape();
@@ -103,16 +105,16 @@ function drawProceduralShape() {
   push();
   
   // THE OUTLINE (Wireframe)
-  // This gives you the "Clear Outline" you asked for
-  strokeWeight(1.5); // Thicker lines
-  stroke(180, 80, 100); // Bright Cyan Lines
+  // This creates the "Clear Outline" visual
+  strokeWeight(1.5); 
+  stroke(180, 80, 100); // Bright Cyan
   
   // THE FILL
-  // We fill it with a dark semi-transparent color so you see the lines pop
-  fill(0, 0, 10, 90); // Almost black, slightly transparent
+  // Dark semi-transparent fill to make the object feel solid but glassy
+  fill(0, 0, 10, 95); 
 
-  // TRIANGLE STRIP LOOP
-  let detail = 8; // Step size
+  // TRIANGLE STRIP LOOP (The Math)
+  let detail = 8; // Step size in degrees
   
   for (let lat = -90; lat < 90; lat += detail) {
     beginShape(TRIANGLE_STRIP);
@@ -130,16 +132,16 @@ function drawProceduralShape() {
 }
 
 function getDistortedVertex(lat, lon) {
+  // Convert spherical coordinates to Cartesian
   let x = cos(lat) * cos(lon);
   let y = cos(lat) * sin(lon);
   let z = sin(lat);
   
-  // TIME: This is the ripple speed.
-  // We removed the 'bass' from the time calculation to stop the violent shaking.
-  // Now it flows at a constant, smooth speed regardless of volume.
+  // TIME: Constant ripple speed
+  // We do NOT multiply this by bass, to prevent shaking
   let time = frameCount * CONFIG.rippleSpeed;
   
-  // NOISE
+  // NOISE GENERATION (The "Blob" Shape)
   let noiseVal = noise(
     x * CONFIG.noiseScale + time, 
     y * CONFIG.noiseScale + time, 
@@ -147,14 +149,14 @@ function getDistortedVertex(lat, lon) {
   );
   
   // DEFORMATION
-  // The shape size still reacts to music, but the "texture" doesn't jitter.
+  // The SIZE grows with volume, but the TEXTURE flows smoothly
   let expansion = map(smoothedBass, 0, 255, 0, CONFIG.maxGrowth);
   let r = CONFIG.baseSize + (expansion * noiseVal);
   
   return createVector(x * r, y * r, z * r);
 }
 
-// --- STARS ---
+// --- STARFIELD CLASS ---
 class Star {
   constructor() {
     this.pos = p5.Vector.random3D().mult(random(400, 1000));
@@ -163,9 +165,14 @@ class Star {
   }
 
   update(energy) {
+    // Warp speed effect
     let speed = map(energy, 0, 255, 0.1, 2);
     this.pos.add(this.vel.copy().mult(speed));
-    if (this.pos.mag() > 1200) this.pos = p5.Vector.random3D().mult(random(400, 600));
+    
+    // Respawn logic
+    if (this.pos.mag() > 1200) {
+      this.pos = p5.Vector.random3D().mult(random(400, 600));
+    }
   }
 
   show() {
@@ -176,10 +183,11 @@ class Star {
   }
 }
 
+// --- UTILS ---
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight, WEBGL);
 }
 
 function triggerSave() {
-  saveCanvas('Alien_Artifact', 'jpg');
+  saveCanvas('Alien_Artifact_Capture', 'jpg');
 }

@@ -1,150 +1,105 @@
-/**
- * RESONANCE: The Geometry of Sound
- * --------------------------------
- * A STEAM Showcase Project visualizing audio frequencies using
- * Fast Fourier Transform (FFT) and Polar Coordinate Geometry.
- * * CORE CONCEPTS (For Judges):
- * 1. FFT (Fast Fourier Transform): Deconstructs sound into frequencies.
- * 2. Logarithmic Averaging: Groups frequencies like the human ear hears them (Octaves).
- * 3. Linear Interpolation: Smooths data to remove "jitter."
- */
-
-// --- GLOBAL VARIABLES ---
 let mic, fft;
-let audioContextStarted = false;
-
-// DATA HISTORY (For the "Tunnel" effect)
+let isStarted = false;
 let history = []; 
-const MAX_HISTORY = 60; // How deep the tunnel goes
-
-// CONFIGURATION (Constants)
-const FFT_SMOOTHING = 0.8; 
-const FFT_BINS = 1024; 
-
-// UI VARIABLES
-let sensitivitySlider, speedSlider, saveButton;
+const MAX_HISTORY = 50; 
 
 function setup() {
+  // Create canvas that fills the window
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
   angleMode(DEGREES);
-  
-  // Link JS variables to HTML UI elements
-  sensitivitySlider = select('#sensSlider');
-  speedSlider = select('#speedSlider');
-  saveButton = select('#saveBtn');
-  
-  // Setup Save Functionality
-  saveButton.mousePressed(exportArt);
-
-  // Initialize specific visual settings
   noFill();
-  strokeWeight(2);
 }
 
-// Browser Requirement: User must interact to start AudioContext
-function touchStarted() {
-  if (!audioContextStarted) {
-    userStartAudio(); // p5.sound helper
+// CALLED BY HTML WHEN YOU CLICK THE SCREEN
+function startSystem() {
+  if (!isStarted) {
+    userStartAudio(); // Force browser audio permission
     
-    // Initialize Audio Input
     mic = new p5.AudioIn();
     mic.start();
     
-    // Initialize FFT Analysis
-    fft = new p5.FFT(FFT_SMOOTHING, FFT_BINS);
+    fft = new p5.FFT(0.8, 128); // 128 Bins is faster/safer than 1024
     fft.setInput(mic);
     
-    audioContextStarted = true;
+    isStarted = true;
     
-    // Toggle UI: Hide Overlay, Show Controls
-    select('#overlay').addClass('hidden');
-    select('#controls').removeClass('hidden');
+    // Hide overlay using standard JS
+    document.getElementById('overlay').classList.add('hidden');
+    document.getElementById('controls').classList.remove('hidden');
   }
 }
 
 function draw() {
-  background(0); // Clear frame (Black)
+  background(0); // Black background
 
-  // 1. IDLE ANIMATION (If waiting for start)
-  if (!audioContextStarted) {
-    drawIdleAnimation();
+  // 1. IF SYSTEM HASN'T STARTED: Show a pulsating "Standby" circle
+  if (!isStarted) {
+    stroke(255);
+    strokeWeight(1);
+    ellipse(width/2, height/2, 100 + sin(frameCount * 5) * 20);
     return;
   }
 
-  // 2. ANALYZE AUDIO
-  
-  // getOctaveBands splits the spectrum into logarithmic groups (Bass, Low-Mid, Mid, High-Mid, Treble)
-  // split: 3 means "3 bands per octave" (Standard for equalizers)
-  let spectrum = fft.analyze(); 
-  let octaves = fft.getOctaveBands(3, 15, 250); 
-  let averages = fft.getLogAverages(octaves);
-
-  // 3. STORE HISTORY
-  // Only push new data based on "Speed" slider to optimize performance
-  // If speed is 0, tunnel stops.
-  let speed = speedSlider.value();
-  if (frameCount % (6 - speed) === 0 && speed > 0) {
-    history.push(averages);
+  // 2. CHECK IF MIC IS WORKING
+  let vol = mic.getLevel(); 
+  // If volume is essentially zero, draw a warning (helps debug)
+  if (vol === 0) {
+    fill(255);
+    noStroke();
+    textAlign(CENTER);
+    text("MICROPHONE OFF OR MUTED", width/2, height/2);
+    return;
   }
+
+  // 3. GET DATA
+  let spectrum = fft.analyze(); 
+  history.push(spectrum);
   
   if (history.length > MAX_HISTORY) {
-    history.shift(); // Remove oldest frame
+    history.shift();
   }
 
-  // 4. DRAW THE TUNNEL
-  // We iterate backwards so the "oldest" rings are drawn first (in the back)
-  translate(width / 2, height / 2); // Center 0,0
+  translate(width / 2, height / 2);
+
+  // 4. DRAW TUNNEL
+  // Using standard loop + vertex (Robust Method)
   
-  let sensitivity = sensitivitySlider.value();
+  // Get Zoom Slider Value safely
+  let zoom = 1.0;
+  let slider = document.getElementById('sensSlider');
+  if (slider) zoom = slider.value;
 
   for (let i = 0; i < history.length; i++) {
-    let dataLayer = history[i];
-    
-    // Depth Calculation: Older frames are smaller
-    // map(value, minIn, maxIn, minOut, maxOut)
-    let depthScale = map(i, 0, history.length, 0.1, 1.5); 
-    let alpha = map(i, 0, history.length, 0, 100); // Fade in from back
-    
+    let layer = history[i];
+    let depth = map(i, 0, history.length, 0.1, 1.5); 
+    let alpha = map(i, 0, history.length, 0, 100); 
+
     beginShape();
-    // Loop through the frequency bands (Bass -> Treble)
-    for (let j = 0; j < dataLayer.length; j++) {
+    // We step by 2 to reduce lag
+    for (let j = 0; j < layer.length; j+=2) {
+      let amp = layer[j];
+      let angle = map(j, 0, layer.length, 0, 360);
       
-      let amp = dataLayer[j]; // Volume of this frequency band
-      let angle = map(j, 0, dataLayer.length, 0, 360); // Spread around circle
+      // The Math: Radius + Amplitude * Zoom
+      let r = (50 + i * 5) + map(amp, 0, 255, 0, 150 * zoom);
       
-      // MATH: Radius = Base Size + (Amplitude * Sensitivity)
-      let r = (100 * depthScale) + map(amp, 0, 255, 0, 200 * sensitivity) * depthScale;
+      let hue = map(j, 0, layer.length, 200, 360) + (i * 2);
       
-      // COLOR MATH: 
-      // Hue is based on Frequency (j). Bass = Red/Orange, Treble = Blue/Purple.
-      // We add 'i' (history index) to make colors spiral slightly over time.
-      let hue = map(j, 0, dataLayer.length, 0, 300) + (i * 2); 
-      stroke(hue % 360, 80, 100, alpha);
+      stroke(hue % 360, 90, 100, alpha);
+      strokeWeight(2);
       
-      // POLAR TO CARTESIAN CONVERSION
       let x = r * cos(angle);
       let y = r * sin(angle);
       
-      // CurveVertex makes the lines round instead of jagged
-      curveVertex(x, y);
+      vertex(x, y);
     }
-    
-    // Close the loop cleanly
     endShape(CLOSE);
   }
 }
 
-// A gentle breathing circle for before the user clicks start
-function drawIdleAnimation() {
-  translate(width/2, height/2);
-  let pulse = sin(frameCount * 2) * 50;
-  stroke(180, 50, 100);
-  noFill();
-  ellipse(0, 0, 200 + pulse, 200 + pulse);
-}
-
-function exportArt() {
+// CALLED BY HTML BUTTON
+function triggerSave() {
   saveCanvas('Resonance_Capture', 'jpg');
 }
 

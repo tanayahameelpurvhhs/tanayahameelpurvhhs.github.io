@@ -1,541 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tanay's Portfolio</title>
-  <style>
-    :root {
-      --bg-light: #e6f0ff;
-      --bg-dark: #0e0f1a;
-      --card-light: #ffffff;
-      --card-dark: #1a1a2e;
-      --text-light: #1a1a1a;
-      --text-dark: #e0e0e0;
-      --primary: #00bfff;
-      --embed-bg: #f0f0f0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resonance | D128 ST3AM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #000; overflow: hidden; font-family: 'Courier New', Courier, monospace; }
+        
+        /* The UI Overlay */
+        #ui-layer {
+            position: absolute; bottom: 20px; left: 0; width: 100%;
+            display: flex; justify-content: center; gap: 20px;
+            pointer-events: none; /* Let clicks pass through to canvas if needed */
+        }
+        
+        button {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-light);
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.4s ease, color 0.4s ease;
-    }
+        button:hover { background: rgba(255, 255, 255, 0.3); }
 
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
-    header {
-      background: linear-gradient(90deg, #007acc, #00bfff);
-      color: white;
-      padding: 30px 0;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    h1 {
-      font-size: 2.5em;
-      margin: 0;
-      letter-spacing: 1px;
-    }
-
-    h2 {
-      font-size: 1.2em;
-      margin: 10px 0 0;
-      font-weight: normal;
-    }
-
-    .toggle-container {
-      position: fixed;
-      top: 20px;
-      right: 30px;
-      z-index: 999;
-    }
-
-    .emoji-toggle {
-      font-size: 24px;
-      width: 48px;
-      height: 48px;
-      border: none;
-      cursor: pointer;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #007acc, #00bfff);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.6s ease, background 0.4s ease;
-    }
-
-    .emoji-toggle.flipping {
-      transform: rotateY(180deg);
-    }
-
-    .emoji-toggle:hover {
-      box-shadow: 0 0 15px #00bfff, 0 0 8px #00bfff inset;
-      transform: scale(1.1);
-    }
-
-    .intro {
-      text-align: center;
-      max-width: 700px;
-      margin: 30px auto;
-      font-size: 1.1em;
-      padding: 0 15px;
-    }
-
-    .projects {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      padding: 40px 20px;
-      margin: auto;
-    }
-
-    .project-card {
-      background-color: var(--card-light);
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 191, 255, 0.15);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      width: 90%;
-      max-width: 900px;
-      margin: 0 auto;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
-    }
-
-    body.dark .project-card {
-      background-color: var(--card-dark);
-    }
-
-    .project-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .project-card:hover {
-      box-shadow: 0 0 25px rgba(0, 191, 255, 0.4), 0 0 10px rgba(0, 191, 255, 0.2);
-      transform: scale(1.015);
-    }
-
-    .project-card iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      background-color: var(--embed-bg);
-    }
-
-    .project-info {
-      padding: 20px;
-    }
-
-    .project-info h3 {
-      margin-top: 0;
-      color: var(--primary);
-      font-size: 1.6em;
-    }
-
-    .project-info p {
-      font-size: 1em;
-      margin: 10px 0;
-    }
-
-    pre {
-      background-color: #111;
-      color: #00ffff;
-      padding: 15px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      border-left: 4px solid var(--primary);
-      border-radius: 8px;
-      font-family: 'Courier New', Courier, monospace;
-    }
-
-    #topBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 30px;
-      z-index: 999;
-      padding: 12px 16px;
-      font-size: 18px;
-      border-radius: 12px;
-      border: 1px solid #00bfff;
-      background-color: #1a1a2e;
-      color: #00bfff;
-      cursor: pointer;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #topBtn:hover {
-      background-color: #00bfff;
-      color: #1a1a2e;
-      box-shadow: 0 0 15px #00bfff, 0 0 8px #00bfff inset;
-      animation: rocket 0.5s ease;
-    }
-
-    @keyframes rocket {
-      0% { transform: translateY(0) scale(1.1); }
-      50% { transform: translateY(-10px) scale(1.2); }
-      100% { transform: translateY(0) scale(1.1); }
-    }
-
-    footer {
-      background-color: #007acc;
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-      margin-top: 40px;
-    }
-  </style>
+        /* Start Screen */
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.9); color: white; cursor: pointer; z-index: 10;
+        }
+        h1 { font-size: 3rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px #fff; }
+        p { color: #aaa; }
+    </style>
 </head>
-
 <body>
 
-  <!-- Header -->
-  <header>
-    <h1>Tanay's Portfolio</h1>
-    <h2>Coding with Brilliance, Playing with Passion</h2>
-  </header>
-
-  <!-- Toggle -->
-  <div class="toggle-container">
-    <button id="modeToggle" onclick="toggleMode()" class="emoji-toggle">🌙</button>
-  </div>
-
-  <!-- Intro -->
-  <div class="intro">
-    <p>Hi! I'm Tanay — a curious high school student who got into coding through school. I enjoy building fun and meaningful apps. This page showcases my personal coding journey and projects. These projects were made with a partner so I wouldn't take full credit for the projects. Hopefully you like them! They are all based on the 17 global goals the United Nations has made to fix.</p>
-  </div>
-
-  <!-- Projects Section -->
-  <div class="projects">
-    <!-- Project 1 -->
-    <div class="project-card">
-      <iframe src="https://academy.cs.cmu.edu/sharing/blanchedAlmondChicken811444/embed"></iframe>
-      <div class="project-info">
-        <h3>4 Global Goals</h3>
-        <p><strong>Description:</strong> This project showcases 4 of the 17 global goals in a small, standard picture made with code.</p>
-        <p><strong>Concepts Learned:</strong> Making pictures with code, using shapes, gradients, and layering.</p>
-        <p><strong>Challenges:</strong> It was time-consuming to plan and draw each image accurately using code.</p>
-        <p><strong>Code:</strong></p>
-        <pre><code>
-### Life Below Water
-Rect(0,0,200,200,fill='blue',border='black')
-Label('Life Below Water',100,20,size=15,bold=True,font='monospace')
-Oval(140,80,70,35,fill=gradient('cyan','blue'),border='black')
-Polygon(120,80,80,60,80,100,fill=gradient('cyan','blue'),border='black')
-Oval(90,150,80,35,fill=gradient('cyan','blue'),border='black')
-Polygon(60,150,30,130,30,170,fill=gradient('cyan','blue'),border='black')
-Circle(150,120,10,fill='lightCyan',border='black')
-Circle(170,50,10,fill='lightCyan',border='black')
-Circle(50,100,10,fill='lightCyan',border='black')
-Circle(30,60,10,fill='lightCyan',border='black')
-        </code></pre>
-        <p><em>Explanation:</em> I used shapes and gradients in Python to create an underwater scene for the "Life Below Water" goal. The fish and bubbles are coded using ovals, polygons, and circles with gradient fills.</p>
-      </div>
+    <div id="overlay" onclick="startApp()">
+        <h1>RESONANCE</h1>
+        <p>[ CLICK TO INITIALIZE SENSORS ]</p>
     </div>
 
-    <!-- Empty Project Cards (x7) -->
-    <!-- Add 7 empty cards below for other projects -->
-    <div class="project-card">
-  <iframe width="410" height="460" src="https://academy.cs.cmu.edu/sharing/midnightBlueFly830313/embed"></iframe>
-  <div class="project-info">
-    <h3>Life on Land Slides</h3>
-    <p><strong>Description:</strong> This interactive slideshow project presents UN Goal 15, Life on Land, which shows us how the land is being degraded by multiple factors.</p>
-    <p><strong>Concepts Learned:</strong> Learning functions, Parameters, event handlers such as <code>onMouseRelease()</code>, and muliple other things related to this project.</p>
-    <p><strong>Challenges:</strong> Making transitions between slides work properly and positioning shapes responsively were tricky parts of the project.</p>
-    <p><strong>Code:</strong></p>
-    <pre><code>
-Rect(0,0,400,400,fill='skyBlue')
-Rect(0,300,400,100,fill='lightGreen')
-sun = Star(120,150,20,9,roundness = 90, fill='yellow') 
-sunback = Star(120,150,30,9,roundness = 10, fill='yellow')
-def drawLogoA(x,y,radius):
-    sun.centerX = x
-    sun.centerY = y
-    sun.radius = radius
-    sunback.centerX = x
-    sunback.centerY = y
-    sunback.radius = (radius * 3)/2
-    
-tree = Polygon(100,345,140,315,155,280,195,280,210,315,250,345,fill='saddleBrown')
+    <div id="ui-layer" style="display:none;">
+        <button onclick="togglePause()">Freeze / Resume</button>
+        <button onclick="saveArt()">Export .JPG</button>
+    </div>
 
-def drawLogoB(x,y,size):
-    tree.centerX = x
-    tree.centerY = y
-    tree.width = size + 40
-    tree.height = size
+    <script>
+        let mic, fft;
+        let isStarted = false;
+        let isPaused = false;
 
-    
-cause = Label('',200,150,size = 15)
-effect = Label('',200,190,size = 15)
-problemNumber = Label('',200,50,size = 24)
-title = Label('',200,220,size = 30)
-author = Label('',200,260,size = 20)
-Line(0,0,0,400,lineWidth = 30)
-progressbar = Line(0,0,0,57,lineWidth = 30,fill='yellow')
-app.slide=0
-if app.slide==0:
-        drawLogoA(120,150,40)
-        drawLogoB(280,350,60)
-        title.value = 'Life on Land'
-        author.value = 'Tanay and Gurshaan'
-def onMouseRelease(x,y):
-    app.slide=app.slide+1
-    if app.slide ==7:
-        app.slide=0
-    if app.slide==1:
-        drawLogoA(300,300,70)
-        drawLogoB(75,308,30)
-        problemNumber.value = 'Problem 1'
-        cause.value = 'Deforestation is happening too quickly and as a '
-        effect.value = 'result, the worlds forests are getting smaller'
-        title.value = ''
-        author.value = ''
-        progressbar.y2 = 114
-    </code></pre>
-    <p><em>Explanation:</em> In the functions drawLogoA, and drawLogoB, you can see they are a sun and a tree stump, respectively. These are drawn all across the slides, to an effect of Life on Land, and what Life on Land depends on, being the tree stump, and the sun respectively. In this given code snippet, you can see a number of variables defined in the code, which will be helpful for when the project operates. There is also a progress bar inside this code snippet, if you look closely at the variables. These variables and values help us build and help the project be what it is now.</p>
-  </div>
-</div>
-    <!-- Empty Project Card 1 -->
-<!-- Project 3 -->
-<div class="project-card">
-  <iframe src="https://academy.cs.cmu.edu/sharing/maroonSpider122089/embed"></iframe>
-  <div class="project-info">
-    <h3>Clean The Water!</h3>
-    <p><strong>Description:</strong> A clicking game where you clean up water by clicking on the tank. Each time you click on the tank, the water gets cleaner. It supports Global Goal 6: Clean Water and Sanitation.</p>
-    <p><strong>Concepts Learned:</strong> I learned how to use mouse events, variables, conditionals, and counters to create interactive gameplay with resetting behavior.</p>
-    <p><strong>Challenges:</strong> Trying to transition from the next slide and making it so that the tank goes down in pollution required debugging and testing.</p>
-    <p><strong>Code:</strong></p>
-    <pre><code>
-def cleanReplica(opacityNumber,value):
-    app.cleanLevel+=1
-    newOpacity = tank.opacity-opacityNumber
-    
-    if newOpacity < 0:
-        click2start.value='Round ' + (app.slide + 1)
-    else: 
-        tank.opacity = newOpacity
-        if tank.opacity > 70: 
-            click2start.value = 'Game ON!'
-        elif tank.opacity > 50 :
-            click2start.value = 'Keep it up'
-        elif tank.opacity > 30:
-            click2start.value = 'Crossed halfway mark!'
-        elif tank.opacity > 0:
-            click2start.value = 'Almost There'
-        else:
-            click2start.value='Good Job! You did it!'
-
-    print(app.cleanLevel)
-    print(tank.opacity)
-
-        
-def startGame(x,y):
-    infoBackground.visible=False
-    base.visible=True
-    title.visible=True
-    info1.visible=False
-    info2.visible=False
-    info3.visible=False
-    info4.visible=False
-    click2start.visible=True
-    board.visible=False
-    tank.visible=True
-    app.cleanLevel=0
-    tank.fill=gradient('darkGreen','green','darkGreen')
-    app.gameStarted = True
-
-def onMousePress(x,y):
-    if app.gameStarted == False:
-        startGame(100,100)
-    else:
-        if app.slide == 0 :
-            cleanReplica(20,100)
-        elif app.slide == 1:
-            cleanReplica(10,100)
-        elif app.slide == 2:
-            cleanReplica(5,100)
-    </code></pre>
-    <p><em>Explanation:</em> This function checks for pollution clicks. Once an (n) amount of clicks are reached, the clean tank fills and the pollution is removed from the tank, reinforcing the cleanup idea.</p>
-  </div>
-</div>
-
-
-<!-- Empty Project Card 2 -->
-<!-- Project 4 -->
-<div class="project-card">
-  <iframe width="410" height="460" src="https://academy.cs.cmu.edu/sharing/peruMonkey272275/embed"></iframe>
-  <div class="project-info">
-    <h3>UN Goal 12 Quiz</h3>
-    <p><strong>Description:</strong> This is a quiz my partner and I made to teach about UN Goal 12 (Responsible Consumption and Production). It includes mostly true/false and multiple-choice questions about recycling and sustainability.</p>
-    <p><strong>Concepts Learned:</strong> I learned how to use `hits`, `contains`, and `onKeyPress` events. We designed the quiz like a slideshow that updates as users interact.</p>
-    <p><strong>Challenges:</strong> Teamwork was a major challenge at first, which delayed our progress. But once we got organized, we pushed through together.</p>
-    <p><strong>Code:</strong></p>
-    <pre><code>
-def onMousePress(mouseX,mouseY) : 
-    
-    if (Option1.hits(mouseX,mouseY)):
-        if (Option1Label.value == app.Question1):
-            app.score += 1
-            Option1.fill='yellow'
-            print(app.score)
-        else:
-            app.score-= 1
-    
-    elif (Option2.hits(mouseX,mouseY)):
-        if (Option2Label.value == app.Question1):
-            app.score += 1
-            Option2.fill='yellow'
-        else:
-            app.score-= 1
-            
-    if (Option3.hits(mouseX,mouseY)):
-        if Option3.opacity == 0 : 
-            Option3.opacity = 0
-        elif (Option3Label.value == app.Question2):
-            app.score += 1
-            Option3.fill='yellow'
-            print(app.score)
-        else:
-            app.score-= 1
-    elif (Option4.hits(mouseX,mouseY)):
-        if Option4.opacity == 0 : 
-            Option4.opacity = 0
-        elif (Option4Label.value == app.Question2):
-            app.score +=1
-            Option4.fill='yellow'
-        else:
-            app.score-= 1
-    if (Option5.hits(mouseX,mouseY)):
-        if Option5.opacity == 0 : 
-            Option5.opacity = 0
-        elif(Option5Label.value == app.Question3):
-            app.score+=1
-            Option5.fill='yellow'
-        else:
-            app.score-= 1
-    elif(Option6.hits(mouseX,mouseY)):
-        if Option6.opacity == 0 : 
-            Option6.opacity = 0
-        elif(Option6Label.value == app.Question3):
-            app.score+=1
-            Option6.fill='yellow'
-        else:
-            app.score-= 1
-    </code></pre>
-    <p><em>Explanation:</em> This function checks which quiz option the user clicks and updates the score based on whether the selected answer is correct. We also change the fill color to give visual feedback.</p>
-  </div>
-</div>
-
-
-<!-- Empty Project Card 3 -->
-<div class="project-card">
-  <iframe src="https://academy.cs.cmu.edu/sharing/chartreuseBee884272/embed" width="410" height="460"></iframe>
-  <div class="project-info">
-    <h3>Find The Food</h3>
-    <p><strong>Description:</strong> This project is themed off of UN Goal 2, Zero Hunger, which was made by me and my partner.</p>
-    <p><strong>Concepts Learned:</strong> Learned complex conditionals, using functions, hits and contains, etc.</p>
-    <p><strong>Challenges:</strong> The debugging and the complex conditionals.</p>
-    <p><strong>Code:</strong></p>
-    <pre><code>def onMousePress(mouseX, mouseY):
-    scoreCounter.toFront()
-    scoreDisplay.toFront()
-    if app.gameStarted == True and circleFinder.contains(app.spritePosX, app.spritePosY):
-        print('hit')
-        hideSprite(spriteGroup)
-        if app.spritePosX == 100:
-            changeValue(388, 333)
-        elif app.spritePosX == 388:
-            changeValue(65, 329)
-        elif app.spritePosX == 65:
-            changeValue(332, 251)
-        elif app.spritePosX == 332:
-            changeValue(107, 45)
-        elif app.spritePosX == 107:
-            changeValue(356, 194)
-        elif app.spritePosX == 356:
-            changeValue(174, 356)
-        elif app.spritePosX == 174:
-            changeValue(222, 301)
-        elif app.spritePosX == 222:
-            changeValue(48, 352)
-        if app.score >= 8:
-            Label('You found all of the packages. Good Job, Scavenger.', 200, 245, fill='white', font='orbitron')
-            Label('Your Pay: 15,000$', 200, 260, fill='white', font='orbitron')
-            Label('The UN has enough food for their conference.', 200, 275, fill='white', font='orbitron')
-        foodSprite(app.spritePosX, app.spritePosY)
-    else:
-        print('no hit', app.spritePosX, app.spritePosY)</code></pre>
-    <p><em>Explanation:</em> This function runs when the mouse is clicked. If the player correctly clicks on the sprite (food package), it moves the sprite to the next location, increases the score, and eventually shows a win screen with a congratulatory message.</p>
-  </div>
-</div>
-
-
-<div class="project-card">
-  <iframe width="410" height="460"
-    src="https://academy.cs.cmu.edu/sharing/grayTiger127490/embed">
-  </iframe>
-  <div class="project-info">
-    <h3>Recycling: Games and Statistics</h3>
-    <p><strong>Description:</strong>This app contains statistics and some games for the related topic, recycling.</p>
-    <p><strong>Concepts Learned:</strong> Randomization, function use (`def`), sprite control, and dynamic value updating.</p>
-    <p><strong>Code Snippet:</strong></p>
-    <pre><code>
-def changeValues(PositionX, PositionY):
-    spriteGroup.visible = True
-    app.spritePositionX = PositionX
-    app.spritePositionY = PositionY
-    app.score += 3
-    scoreC.value = app.score
-    </code></pre>
-    <p><em>Explanation:</em> This function shows how we dynamically move sprites and update the score based on the trash item location.</p>
-  </div>
-</div>
-
-  </div>
-
-  <footer>
-    <p>© 2025 Tanay Mohan Ahameelpur. All rights reserved.</p>
-  </footer>
-
-  <button id="topBtn" onclick="scrollToTop()">🚀</button>
-
-  <script>
-    function toggleMode() {
-      const body = document.body;
-      const toggleBtn = document.getElementById('modeToggle');
-      toggleBtn.classList.add('flipping');
-      setTimeout(() => toggleBtn.classList.remove('flipping'), 600);
-      body.classList.toggle('dark');
-      toggleBtn.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
-    }
-
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Reveal animation
-    const cards = document.querySelectorAll('.project-card');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            angleMode(DEGREES); // Easier to understand math
+            background(0);
         }
-      });
-    }, { threshold: 0.3 });
-    cards.forEach(card => observer.observe(card));
-  </script>
 
+        function startApp() {
+            mic = new p5.AudioIn();
+            mic.start();
+            fft = new p5.FFT(0.8, 64); // Smoothing 0.8, 64 Frequency Bins
+            fft.setInput(mic);
+            
+            isStarted = true;
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('ui-layer').style.display = 'flex';
+        }
+
+        function draw() {
+            if (!isStarted || isPaused) return;
+
+            // Fades the previous frame slightly to create "trails" rather than clearing screen
+            background(0, 0, 0, 10); 
+
+            let spectrum = fft.analyze(); 
+            translate(width / 2, height / 2);
+
+            // Create circular symmetry
+            beginShape();
+            for (let i = 0; i < spectrum.length; i++) {
+                let amp = spectrum[i];
+                let angle = map(i, 0, spectrum.length, 0, 360);
+                
+                // MATH: Mapping Volume to Radius
+                // If quiet, radius is small. If loud, radius expands.
+                let r = map(amp, 0, 255, 100, 400); 
+
+                // MATH: Mapping Pitch to Color (0-255)
+                // Low Bass = Red/Orange, High Treble = Blue/Purple
+                let colorCode = map(i, 0, spectrum.length, 0, 255);
+                
+                stroke(colorCode, 255, 255);
+                strokeWeight(2);
+                colorMode(HSB); 
+                noFill();
+
+                // Convert Polar to Cartesian coordinates
+                let x = r * cos(angle);
+                let y = r * sin(angle);
+                
+                // Add some "jitter" based on volume for energy effect
+                if (amp > 200) { 
+                    x += random(-5, 5); 
+                    y += random(-5, 5);
+                }
+
+                vertex(x, y);
+            }
+            endShape(CLOSE);
+            
+            // Mirror the shape for symmetry
+            beginShape();
+            for (let i = 0; i < spectrum.length; i++) {
+                let amp = spectrum[i];
+                let angle = map(i, 0, spectrum.length, 0, 360);
+                let r = map(amp, 0, 255, 100, 400); 
+                let x = r * cos(angle);
+                let y = r * sin(angle);
+                vertex(-x, -y); // Mirror coordinates
+            }
+            endShape(CLOSE);
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+        }
+
+        function saveArt() {
+            saveCanvas('My_Sonic_Sculpture', 'jpg');
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            background(0);
+        }
+    </script>
 </body>
-
 </html>

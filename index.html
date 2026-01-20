@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resonance: Hyper-Singularity</title>
+  <title>Resonance: Alien Artifact</title>
   
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -15,20 +15,19 @@
 
   <div id="overlay" onclick="initSystem()">
     <div class="scanner-line"></div>
-    <h1>SINGULARITY</h1>
-    <p class="blink">[ INITIALIZE AUDIO UPLINK ]</p>
+    <h1>ENTITY DETECTED</h1>
+    <p class="blink">[ CLICK TO ESTABLISH UPLINK ]</p>
   </div>
 
   <div id="hud">
-    <div class="hud-item">SYSTEM: <span class="active">ONLINE</span></div>
-    <div class="hud-item">RENDER: <span class="active">WEBGL_3D</span></div>
+    <div class="hud-item">STATUS: <span class="active">CONNECTED</span></div>
+    <div class="hud-item">GEOMETRY: <span class="active">PROCEDURAL_NOISE</span></div>
     <div class="hud-item" id="fpsDisplay">FPS: --</div>
-    <div class="hud-item">ENTITIES: 200</div>
+    <div class="hud-item">PARTICLES: 250</div>
   </div>
 
   <div id="controls">
-    <button onclick="toggleAutoCam()">TOGGLE CAM</button>
-    <button onclick="triggerSave()">EXPORT DATA</button>
+    <button onclick="triggerSave()">CAPTURE SNAPSHOT</button>
   </div>
 
   <script src="sketch.js"></script>

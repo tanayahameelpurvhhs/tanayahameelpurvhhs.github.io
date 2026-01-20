@@ -2,9 +2,9 @@
 body {
   margin: 0;
   background-color: #000;
-  overflow: hidden;
-  font-family: 'Orbitron', sans-serif;
-  color: #00ffcc;
+  overflow: hidden; /* Prevents scrollbars */
+  font-family: 'Orbitron', sans-serif; /* Sci-Fi Font */
+  color: #00ffcc; /* Cyan Text */
 }
 
 /* OVERLAY (Start Screen) */
@@ -21,7 +21,7 @@ h1 {
   text-shadow: 0 0 20px #00ffcc; margin: 0 0 10px 0;
 }
 
-.blink { animation: blinker 1.5s linear infinite; font-size: 14px; }
+.blink { animation: blinker 1.5s linear infinite; font-size: 14px; opacity: 0.8; }
 @keyframes blinker { 50% { opacity: 0; } }
 
 /* HUD (Top Left) */
@@ -29,6 +29,7 @@ h1 {
   position: absolute; top: 20px; left: 20px;
   display: none; pointer-events: none;
 }
+
 .hud-item {
   font-size: 12px; margin-bottom: 5px; opacity: 0.8;
   text-shadow: 0 0 5px #00ffcc;
@@ -45,12 +46,13 @@ button {
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid #00ffcc; color: #00ffcc;
   padding: 12px 24px; font-family: 'Orbitron', sans-serif;
-  font-size: 12px; letter-spacing: 1px;
+  font-size: 12px; letter-spacing: 2px;
   cursor: pointer; transition: all 0.3s;
 }
+
 button:hover { background: #00ffcc; color: black; box-shadow: 0 0 20px #00ffcc; }
 
-/* SCANNER ANIMATION */
+/* SCANNER ANIMATION LINE */
 .scanner-line {
   position: absolute; top: 0; left: 0; width: 100%; height: 2px;
   background: #00ffcc; box-shadow: 0 0 15px #00ffcc;

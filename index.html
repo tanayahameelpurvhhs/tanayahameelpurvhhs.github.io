@@ -3,30 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resonance: The Geometry of Sound</title>
+  <title>Resonance: Geometry of Sound</title>
   <link rel="stylesheet" href="style.css" />
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
 </head>
 <body>
 
-  <div id="overlay">
+  <div id="overlay" onclick="startSystem()">
     <h1>RESONANCE</h1>
-    <p>Visualizing the Mathematics of Audio</p>
-    <div class="click-prompt">[ CLICK TO INITIALIZE SENSORS ]</div>
+    <p>System Standby...</p>
+    <div class="click-prompt">[ CLICK ANYWHERE TO START ]</div>
   </div>
 
   <div id="controls" class="hidden">
     <div class="control-group">
-      <label>SENSITIVITY</label>
-      <input type="range" id="sensSlider" min="1" max="5" step="0.1" value="2.0">
+      <label>ZOOM</label>
+      <input type="range" id="sensSlider" min="0.5" max="3.0" step="0.1" value="1.0">
     </div>
     <div class="control-group">
-      <label>TUNNEL SPEED</label>
-      <input type="range" id="speedSlider" min="0" max="5" step="1" value="2">
-    </div>
-    <div class="control-group">
-      <button id="saveBtn">EXPORT .JPG</button>
+      <button onclick="triggerSave()">SAVE IMAGE</button>
     </div>
   </div>
 

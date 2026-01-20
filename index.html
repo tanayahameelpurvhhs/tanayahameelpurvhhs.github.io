@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resonance: Geometry of Sound</title>
+  <title>Resonance: Hyper-Singularity</title>
+  
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
 </head>
 <body>
 
-  <div id="overlay" onclick="startSystem()">
-    <h1>RESONANCE</h1>
-    <p>System Standby...</p>
-    <div class="click-prompt">[ CLICK ANYWHERE TO START ]</div>
+  <div id="overlay" onclick="initSystem()">
+    <div class="scanner-line"></div>
+    <h1>SINGULARITY</h1>
+    <p class="blink">[ INITIALIZE AUDIO UPLINK ]</p>
   </div>
 
-  <div id="controls" class="hidden">
-    <div class="control-group">
-      <label>ZOOM</label>
-      <input type="range" id="sensSlider" min="0.5" max="3.0" step="0.1" value="1.0">
-    </div>
-    <div class="control-group">
-      <button onclick="triggerSave()">SAVE IMAGE</button>
-    </div>
+  <div id="hud">
+    <div class="hud-item">SYSTEM: <span class="active">ONLINE</span></div>
+    <div class="hud-item">RENDER: <span class="active">WEBGL_3D</span></div>
+    <div class="hud-item" id="fpsDisplay">FPS: --</div>
+    <div class="hud-item">ENTITIES: 200</div>
+  </div>
+
+  <div id="controls">
+    <button onclick="toggleAutoCam()">TOGGLE CAM</button>
+    <button onclick="triggerSave()">EXPORT DATA</button>
   </div>
 
   <script src="sketch.js"></script>

@@ -1,182 +1,323 @@
-// --- CONFIGURATION ---
+/**
+ * RESONANCE: HYPER-SINGULARITY ENGINE
+ * V 4.0 - FINAL COMPLEXITY BUILD
+ * * FEATURES:
+ * - 3D Perlin Noise Displacement (Vertex Shader Simulation)
+ * - Fractal Brownian Motion (Octave Noise)
+ * - Reactive Camera Trauma System
+ * - Dynamic Palette Interpolation
+ */
+
+// --- CONFIGURATION MATRIX ---
+const CONFIG = {
+  // Visual Settings
+  particles: 250,          // High particle count for "dusty" atmosphere
+  blobDetail: 6,           // Lower = smoother, Higher = sharper spikes (4-8 recommended)
+  baseRadius: 70,          // Size of the core when silent
+  maxDeform: 140,          // How big it gets when loud
+  
+  // Physics
+  smoothness: 0.2,         // 0.0 = instant reaction, 1.0 = no reaction
+  rotSpeed: 0.1,           // Global rotation speed
+  
+  // Audio
+  fftBins: 64,             // 64 is optimal for 3D geometry generation
+  minBass: 180,            // Threshold to trigger "Shake"
+};
+
+// --- GLOBAL STATE ---
 let mic, fft;
 let isStarted = false;
-let autoCam = true; // Camera drifts automatically
+let autoCam = true;
 
-// COMPLEXITY: Particle System
-let particles = [];
-const NUM_PARTICLES = 200; 
+// Physics State
+let bassEnergy = 0;
+let smoothedBass = 0;
+let midEnergy = 0;
+let camShake = 0;
+
+// Entities
+let particleSystem = [];
+let ringGeometry = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   colorMode(HSB, 360, 100, 100, 100);
   angleMode(DEGREES);
   
-  // Create the Starfield
-  for(let i = 0; i < NUM_PARTICLES; i++) {
-    particles.push(new Particle());
+  // Initialize Particle System
+  for (let i = 0; i < CONFIG.particles; i++) {
+    particleSystem.push(new SpaceDust());
   }
 }
 
-// UI TRIGGER
+// --- SYSTEM INITIALIZATION ---
 function initSystem() {
   if (!isStarted) {
     userStartAudio();
     mic = new p5.AudioIn();
     mic.start();
     
-    // 64 bins is the sweet spot for 3D smoothness
-    fft = new p5.FFT(0.7, 64);
+    fft = new p5.FFT(0.8, CONFIG.fftBins); // High smoothing for FFT
     fft.setInput(mic);
     
     isStarted = true;
     
-    // UI Updates
-    document.getElementById('overlay').style.display = 'none';
-    document.getElementById('hud').style.display = 'block';
+    // UI Hiding logic
+    const overlay = document.getElementById('overlay');
+    const hud = document.getElementById('hud');
+    const controls = document.getElementById('controls');
     
-    // Ensure controls are visible (using flex to match CSS)
-    let controls = document.getElementById('controls');
-    controls.style.display = 'flex';
+    if(overlay) overlay.style.display = 'none';
+    if(hud) hud.style.display = 'block';
+    if(controls) controls.style.display = 'flex';
   }
 }
 
 function draw() {
-  background(0); // Deep Space Black
+  background(0); // Void color
 
-  // IDLE MODE (Before Click)
+  // IDLE STATE
   if (!isStarted) {
-    rotateY(frameCount * 0.5);
-    stroke(0, 255, 100); noFill();
-    sphere(80);
+    drawIdleGraphic();
     return;
   }
 
-  // --- 1. SYSTEM LOGIC ---
-  // Update FPS Counter
-  if (frameCount % 30 === 0) {
-    document.getElementById('fpsDisplay').innerText = "FPS: " + Math.floor(frameRate());
-  }
+  // 1. COMPUTE PHYSICS & AUDIO
+  updateAudioPhysics();
+  
+  // 2. UPDATE CAMERA & LIGHTING
+  updateCamera();
+  setLighting();
 
-  // --- 2. CAMERA CONTROL ---
-  orbitControl(); // Allow Mouse Drag
-  if (autoCam) {
-    rotateY(frameCount * 0.1); // Slow drift
-    rotateX(sin(frameCount * 0.05) * 5); // Subtle tilt
-  }
+  // 3. RENDER SCENE
+  drawNebulaCore();  // The main blob
+  drawDataRing();    // The Saturn ring
+  drawParticles();   // The stars
+  
+  // 4. UPDATE HUD
+  updateHUD();
+}
 
-  // --- 3. AUDIO ANALYSIS ---
-  let spectrum = fft.analyze();
-  let bass = fft.getEnergy("bass");
-  let mid = fft.getEnergy("mid");
-  let treble = fft.getEnergy("treble");
+// --- CORE RENDER FUNCTIONS ---
 
-  // --- 4. LIGHTING ---
-  // A blue light from the left, a pink light from the right
-  ambientLight(50);
-  pointLight(200, 100, 100, -500, 0, 200); // Blueish
-  pointLight(320, 100, 100, 500, 0, 200);  // Pinkish
-
-  // --- 5. THE CORE (Living Sphere) ---
+function drawNebulaCore() {
   push();
   noStroke();
   
-  // The core throbs with the Bass
-  let coreSize = map(bass, 0, 255, 40, 90);
+  // MATERIAL PROPERTIES
+  // Specular material interacts with light to look shiny/wet
+  specularMaterial(255); 
+  shininess(30);         
   
-  // Use emission to make it look like it's glowing internally
-  emissiveMaterial(map(bass, 0, 255, 200, 280), 80, 100);
-  fill(0, 0, 100); 
+  // DYNAMIC COLOR
+  // Interpolate hue based on loudness
+  let hueBase = map(smoothedBass, 0, 255, 200, 360); 
+  fill(hueBase, 80, 100);
   
-  // Draw the sphere
-  // We use detail(24) to keep it looking smooth but performant
-  sphere(coreSize, 24, 24);
+  // GEOMETRY GENERATION (TRIANGLE STRIPS)
+  // This creates a sphere where every point is pushed out by noise
+  let resolution = 8; // Step size for loops
   
-  // Add a wireframe cage around the core for "Tech" look
-  noFill();
-  stroke(200, 50, 100, 50);
-  strokeWeight(1);
-  rotateY(frameCount);
-  sphere(coreSize + 10, 8, 8);
+  for (let lat = -90; lat < 90; lat += resolution) {
+    beginShape(TRIANGLE_STRIP);
+    for (let lon = 0; lon <= 360; lon += resolution) {
+      
+      // Vertex 1 (Current Latitude)
+      let v1 = getProceduralVertex(lat, lon);
+      vertex(v1.x, v1.y, v1.z);
+      
+      // Vertex 2 (Next Latitude)
+      let v2 = getProceduralVertex(lat + resolution, lon);
+      vertex(v2.x, v2.y, v2.z);
+    }
+    endShape();
+  }
   pop();
+}
 
-  // --- 6. THE DATA RING (Saturn Style) ---
-  // Displays the raw FFT data as bars orbiting the center
-  push();
-  rotateZ(30); // Tilt the ring
-  rotateY(frameCount * -0.5); // Spin the ring opposite to camera
+/**
+ * THE COMPLEXITY ENGINE
+ * Calculates 3D coordinates using Trigonometry + Perlin Noise
+ */
+function getProceduralVertex(lat, lon) {
+  // Convert spherical (lat, lon) to Cartesian (x, y, z) unit vector
+  let x = cos(lat) * cos(lon);
+  let y = cos(lat) * sin(lon);
+  let z = sin(lat);
   
+  // FRACTAL NOISE (Complexity Booster)
+  // We layer noise to get "rough" details on top of "smooth" waves
+  let time = frameCount * 0.01;
+  let noiseInput = 2.5; // Scale of the texture
+  
+  // Layer 1: General Shape (Big blobs)
+  let n1 = noise(x * noiseInput + time, y * noiseInput + time, z * noiseInput);
+  
+  // Layer 2: Surface Detail (Roughness)
+  let n2 = noise(x * 5 + time * 2, y * 5, z * 5);
+  
+  // Combine layers
+  let combinedNoise = n1 + (n2 * 0.2); 
+  
+  // Apply Audio Reactivity
+  // The louder the bass, the more the noise pushes the vertex out
+  let extrusion = map(smoothedBass, 0, 255, 0, CONFIG.maxDeform);
+  
+  // Final Radius calculation
+  let r = CONFIG.baseRadius + (combinedNoise * extrusion);
+  
+  // Return the final 3D point
+  return createVector(x * r, y * r, z * r);
+}
+
+function drawDataRing() {
+  push();
+  // Rotate the ring to look cool
+  rotateZ(25);
+  rotateX(frameCount * 0.2);
+  
+  let spectrum = fft.analyze();
   noFill();
   strokeWeight(2);
   
   for (let i = 0; i < spectrum.length; i++) {
     let amp = spectrum[i];
     let angle = map(i, 0, spectrum.length, 0, 360);
-    let r = 150 + map(amp, 0, 255, 0, 100); // Radius varies by volume
+    
+    // Dynamic Radius to clear the blob
+    let r = 250 + map(amp, 0, 255, 0, 50);
     
     let x = r * cos(angle);
     let y = r * sin(angle);
     
-    // Color gradient based on angle
-    stroke(angle, 80, 100);
+    // Color gradient
+    stroke(i * 4, 80, 100);
     
-    // Draw a line from the "Orbit" pointing outwards
-    line(150 * cos(angle), 150 * sin(angle), 0, x, y, 0);
+    // Draw "scanner lines"
+    line(200 * cos(angle), 200 * sin(angle), 0, x, y, 0);
+    
+    // Draw "data points" at the tips
+    push();
+    translate(x, y, 0);
+    strokeWeight(4);
+    point(0,0,0);
+    pop();
   }
   pop();
+}
 
-  // --- 7. PARTICLE STARFIELD ---
-  // Updates and draws every single particle
-  for (let p of particles) {
-    p.update(bass); // Bass makes them move faster
+function drawParticles() {
+  for (let p of particleSystem) {
+    p.update(smoothedBass);
     p.show();
   }
 }
 
-// --- CLASS: PARTICLE ---
-class Particle {
-  constructor() {
-    // Spawn in a random location in a cube
-    this.pos = p5.Vector.random3D().mult(random(300, 800));
-    this.vel = p5.Vector.random3D().normalize(); // Direction
-    this.size = random(2, 6);
-    this.color = random(180, 300); // Blue to Purple range
-  }
+// --- PHYSICS & MATH HELPERS ---
 
+function updateAudioPhysics() {
+  let spectrum = fft.analyze();
+  bassEnergy = fft.getEnergy("bass");
+  midEnergy = fft.getEnergy("mid");
+  
+  // SMOOTHING ALGORITHM (Linear Interpolation)
+  // This makes the shape look liquid instead of glitchy
+  smoothedBass = lerp(smoothedBass, bassEnergy, CONFIG.smoothness);
+  
+  // CAMERA TRAUMA CALCULATION
+  // If bass hits hard, add trauma
+  if (bassEnergy > CONFIG.minBass) {
+    camShake += 2;
+  }
+  // Decay trauma
+  camShake *= 0.9;
+}
+
+function updateCamera() {
+  orbitControl(); // Mouse interaction
+  
+  if (autoCam) {
+    // Gentle Drift
+    rotateY(frameCount * CONFIG.rotSpeed);
+    
+    // Apply Trauma Shake (Random jitter)
+    let shakeX = random(-camShake, camShake);
+    let shakeY = random(-camShake, camShake);
+    translate(shakeX, shakeY, 0);
+  }
+}
+
+function setLighting() {
+  ambientLight(40);
+  // 3-Point Lighting Setup for cinematic look
+  pointLight(255, 0, 0, -500, -200, 200);   // Red Rim Light
+  pointLight(0, 200, 255, 500, 200, 200);   // Blue Fill Light
+  directionalLight(255, 255, 255, 0, 0, -1); // White Key Light
+}
+
+function drawIdleGraphic() {
+  rotateY(frameCount * 0.5);
+  rotateX(frameCount * 0.2);
+  stroke(0, 255, 255, 50);
+  noFill();
+  sphere(100);
+}
+
+function updateHUD() {
+  if (frameCount % 10 === 0) {
+    let fpsEl = document.getElementById('fpsDisplay');
+    if(fpsEl) fpsEl.innerText = "FPS: " + Math.floor(frameRate());
+  }
+}
+
+// --- CLASS DEFINITIONS ---
+
+class SpaceDust {
+  constructor() {
+    // Spawn in random spherical volume
+    this.pos = p5.Vector.random3D().mult(random(400, 1200));
+    this.vel = p5.Vector.random3D().normalize();
+    this.baseSize = random(1, 4);
+    this.color = random(200, 300); // Blue-Purple range
+  }
+  
   update(energy) {
-    // Physics: Move position by velocity
-    // "Warp Speed" effect when Bass hits
-    let speed = map(energy, 0, 255, 0.5, 4);
+    // Warp speed effect on high energy
+    let speed = map(energy, 0, 255, 0.5, 8);
     this.pos.add(this.vel.copy().mult(speed));
     
-    // Boundary Check: If too far or too close, reset
-    if (this.pos.mag() > 1000 || this.pos.mag() < 100) {
-      this.pos = p5.Vector.random3D().mult(random(300, 800));
+    // Respawn logic (Infinite loop)
+    if (this.pos.mag() > 1500) {
+      this.pos = p5.Vector.random3D().mult(random(300, 400));
     }
   }
-
+  
   show() {
     push();
     translate(this.pos.x, this.pos.y, this.pos.z);
     
-    // Billboard effect (points always face camera)
-    // Using box(s) is faster than sphere(s) for 200 particles
+    // Distance fading
+    let alpha = map(this.pos.mag(), 0, 1500, 100, 0);
+    
+    fill(this.color, 60, 100, alpha);
     noStroke();
-    fill(this.color, 80, 100);
-    box(this.size);
+    
+    // Use box for performance, but small enough to look like stars
+    box(this.baseSize);
     pop();
   }
 }
 
-// --- UTILITIES ---
-function triggerSave() {
-  saveCanvas('Hyper_Singularity', 'jpg');
+// --- UTILITY ---
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight, WEBGL);
 }
 
 function toggleAutoCam() {
   autoCam = !autoCam;
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight, WEBGL);
+function triggerSave() {
+  saveCanvas('HyperSingularity_Capture', 'jpg');
 }

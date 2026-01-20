@@ -1,23 +1,25 @@
 /**
- * PROJECT: HYPER-ORGANIC AUDIO VISUALIZER
- * CORE: PROCEDURAL MESH GENERATION
+ * PROJECT: ALIEN ARTIFACT (STABILIZED)
+ * FEATURES: WIREFRAME OUTLINE, SMOOTH PHYSICS, NO RINGS
  */
 
 // --- CONFIGURATION ---
 const CONFIG = {
-  particles: 250,      // Starfield density
-  baseSize: 60,        // Minimum core size
-  maxGrowth: 180,      // Maximum expansion on bass hits
-  noiseScale: 3.5,     // Higher = More spikes (Less spherical)
-  speed: 0.005,        // Speed of the liquid ripple
-  smoothness: 0.15     // Physics damping (0.1 = slow/heavy, 0.9 = twitchy)
+  particles: 200,      // Background stars
+  baseSize: 70,        // Core size
+  maxGrowth: 100,      // Reduced slightly to prevent "exploding" look
+  noiseScale: 3.0,     // How "spikey" it is
+  
+  // PHYSICS TUNING (The fix for shaking)
+  // Lower = Smoother/Slower reaction. Higher = Twitchy.
+  smoothness: 0.08,    
+  rippleSpeed: 0.003,  // How fast the liquid flows (Slower is better)
 };
 
 // --- GLOBAL VARIABLES ---
 let mic, fft;
 let isStarted = false;
-let bassEnergy = 0;
-let smoothedBass = 0; // Physics variable for smooth motion
+let smoothedBass = 0; 
 let particles = [];
 
 function setup() {
@@ -36,10 +38,15 @@ function initSystem() {
     userStartAudio();
     mic = new p5.AudioIn();
     mic.start();
-    fft = new p5.FFT(0.8, 64); // 64 Bins for performance
+    
+    // SMOOTHING: 0.9 means we average 90% of previous frame
+    // This removes the "jitter" from the raw audio
+    fft = new p5.FFT(0.9, 64); 
     fft.setInput(mic);
+    
     isStarted = true;
     
+    // UI Updates
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('hud').style.display = 'block';
     document.getElementById('controls').style.display = 'block';
@@ -50,10 +57,12 @@ function draw() {
   background(0); // Void
 
   if (!isStarted) {
-    // Idle Animation
+    // Idle: A simple breathing wireframe sphere
     rotateY(frameCount * 0.5);
-    stroke(180, 50, 100); noFill();
-    sphere(80);
+    stroke(180, 50, 100); 
+    strokeWeight(1);
+    noFill();
+    sphere(70);
     return;
   }
 
@@ -62,30 +71,28 @@ function draw() {
   document.getElementById('fpsDisplay').innerText = "FPS: " + fps;
 
   fft.analyze();
-  bassEnergy = fft.getEnergy("bass");
+  let bassEnergy = fft.getEnergy("bass");
   
-  // Linear Interpolation for "Heavy Fluid" feel
+  // PHYSICS FIX:
+  // If the audio is quiet (< 30), force it to 0 to stop "idle vibrating"
+  if (bassEnergy < 30) bassEnergy = 0;
+  
+  // Lerp: Moves smoothedBass slowly towards bassEnergy
   smoothedBass = lerp(smoothedBass, bassEnergy, CONFIG.smoothness);
 
-  // --- 2. CAMERA MOVEMENTS ---
-  orbitControl(); // User can drag
-  
-  // Cinematic Drift (Always active)
-  rotateY(frameCount * 0.1); 
-  rotateX(frameCount * 0.05);
+  // --- 2. CAMERA ---
+  orbitControl(); 
+  rotateY(frameCount * 0.05); // Very slow rotation
 
-  // --- 3. LIGHTING (Crucial for 3D look) ---
-  ambientLight(20);
-  // Red Light from left, Blue from right -> Cyberpunk look
-  pointLight(340, 100, 100, -500, 0, 200); 
-  pointLight(200, 100, 100, 500, 0, 200); 
-  specularMaterial(255);
-  shininess(50); // High gloss
+  // --- 3. LIGHTING ---
+  ambientLight(40);
+  pointLight(200, 100, 100, 500, -500, 200); 
+  pointLight(0, 0, 100, 0, 0, 300); // White front light for clarity
 
-  // --- 4. DRAW THE ENTITY (Not a Sphere) ---
+  // --- 4. DRAW THE ENTITY ---
   drawProceduralShape();
 
-  // --- 5. DRAW THE STARS ---
+  // --- 5. DRAW STARS ---
   for (let p of particles) {
     p.update(smoothedBass);
     p.show();
@@ -94,21 +101,23 @@ function draw() {
 
 function drawProceduralShape() {
   push();
-  noStroke();
   
-  // Color shifts from Deep Blue (Quiet) to Hot Pink/White (Loud)
-  let hueVal = map(smoothedBass, 0, 255, 220, 340);
-  fill(hueVal, 90, 100);
+  // THE OUTLINE (Wireframe)
+  // This gives you the "Clear Outline" you asked for
+  strokeWeight(1.5); // Thicker lines
+  stroke(180, 80, 100); // Bright Cyan Lines
+  
+  // THE FILL
+  // We fill it with a dark semi-transparent color so you see the lines pop
+  fill(0, 0, 10, 90); // Almost black, slightly transparent
 
-  // TRIANGLE STRIP MESH GENERATION
-  // We loop through latitude and longitude to build a surface
-  let detail = 6; // Step size (Lower = more detailed but slower)
+  // TRIANGLE STRIP LOOP
+  let detail = 8; // Step size
   
   for (let lat = -90; lat < 90; lat += detail) {
     beginShape(TRIANGLE_STRIP);
     for (let lon = 0; lon <= 360; lon += detail) {
       
-      // Calculate two rows of vertices to connect the strip
       let v1 = getDistortedVertex(lat, lon);
       let v2 = getDistortedVertex(lat + detail, lon);
       
@@ -120,79 +129,57 @@ function drawProceduralShape() {
   pop();
 }
 
-// --- COMPLEXITY MATH ---
-// This function determines the shape. 
-// It pushes points OUTWARD based on Perlin Noise.
 function getDistortedVertex(lat, lon) {
-  // Convert spherical angle to a 3D vector
   let x = cos(lat) * cos(lon);
   let y = cos(lat) * sin(lon);
   let z = sin(lat);
   
-  // Time variable for "Flowing" animation
-  // Moving faster when music is loud
-  let time = frameCount * (CONFIG.speed + (smoothedBass * 0.0001));
+  // TIME: This is the ripple speed.
+  // We removed the 'bass' from the time calculation to stop the violent shaking.
+  // Now it flows at a constant, smooth speed regardless of volume.
+  let time = frameCount * CONFIG.rippleSpeed;
   
-  // NOISE CALCULATION
-  // We sample 3D noise at this point's location
+  // NOISE
   let noiseVal = noise(
     x * CONFIG.noiseScale + time, 
     y * CONFIG.noiseScale + time, 
     z * CONFIG.noiseScale
   );
   
-  // DEFORMATION LOGIC
-  // 1. Base shape is existing radius
-  // 2. We add volume-based expansion
-  // 3. We multiply by noise to create spikes/valleys
+  // DEFORMATION
+  // The shape size still reacts to music, but the "texture" doesn't jitter.
   let expansion = map(smoothedBass, 0, 255, 0, CONFIG.maxGrowth);
-  let r = CONFIG.baseSize + (expansion * noiseVal * 2);
+  let r = CONFIG.baseSize + (expansion * noiseVal);
   
-  // Return the new position
   return createVector(x * r, y * r, z * r);
 }
 
-// --- PARTICLE SYSTEM ---
+// --- STARS ---
 class Star {
   constructor() {
-    this.pos = p5.Vector.random3D().mult(random(500, 1200));
+    this.pos = p5.Vector.random3D().mult(random(400, 1000));
     this.vel = p5.Vector.random3D().normalize();
-    this.size = random(1, 4);
-    this.color = random(200, 255);
+    this.size = random(1, 3);
   }
 
   update(energy) {
-    // Stars move faster with bass (Warp Speed)
-    let speed = map(energy, 0, 255, 0.2, 5);
+    let speed = map(energy, 0, 255, 0.1, 2);
     this.pos.add(this.vel.copy().mult(speed));
-    
-    // Reset if too far
-    if (this.pos.mag() > 1500) {
-      this.pos = p5.Vector.random3D().mult(random(400, 600));
-    }
+    if (this.pos.mag() > 1200) this.pos = p5.Vector.random3D().mult(random(400, 600));
   }
 
   show() {
     push();
     translate(this.pos.x, this.pos.y, this.pos.z);
-    
-    // Face the camera (Billboard effect)
-    let n = this.pos.copy().normalize();
-    
-    fill(this.color, 80, 100);
-    noStroke();
-    
-    // Draw simple box for performance
-    box(this.size);
+    stroke(255); strokeWeight(this.size); point(0,0,0);
     pop();
   }
 }
 
-// --- UTILS ---
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight, WEBGL);
 }
 
 function triggerSave() {
-  saveCanvas('Alien_Artifact_Data', 'jpg');
+  saveCanvas('Alien_Artifact', 'jpg');
 }

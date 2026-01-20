@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Resonance: Alien Artifact</title>
   
-  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   
+  <link rel="stylesheet" href="style.css" />
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
 </head>
@@ -20,14 +21,14 @@
   </div>
 
   <div id="hud">
-    <div class="hud-item">STATUS: <span class="active">CONNECTED</span></div>
-    <div class="hud-item">GEOMETRY: <span class="active">PROCEDURAL_NOISE</span></div>
+    <div class="hud-item">STATUS: <span class="active">STABLE</span></div>
+    <div class="hud-item">GEOMETRY: <span class="active">WIREFRAME_MESH</span></div>
     <div class="hud-item" id="fpsDisplay">FPS: --</div>
-    <div class="hud-item">PARTICLES: 250</div>
+    <div class="hud-item">ENTITIES: 200</div>
   </div>
 
   <div id="controls">
-    <button onclick="triggerSave()">CAPTURE SNAPSHOT</button>
+    <button onclick="triggerSave()">CAPTURE DATA</button>
   </div>
 
   <script src="sketch.js"></script>
